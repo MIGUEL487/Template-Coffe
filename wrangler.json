@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lolocafe",
+  "compatibility_date": "2026-11-09",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "DEFAULT_TENANT_ID": "e1081b0e-95ff-4f50-b67e-f40c8aad1855"
+  }
+}
