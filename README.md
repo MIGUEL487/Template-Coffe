@@ -75,3 +75,12 @@ flow, use `node scripts/cloudflare.mjs login` so login and preview share the sam
 configuration directory. Alternatively, bind `CLOUDFLARE_API_TOKEN` and
 `CLOUDFLARE_ACCOUNT_ID` securely through environment settings. Do not add their
 values to files or chat.
+
+### Cloudflare dependency installation
+
+Cloudflare detects `bun.lock` and installs with `bun install --frozen-lockfile`.
+Both `bun.lock` and `package-lock.json` must stay synchronized with `package.json`.
+The frozen install and production build were verified with Bun 1.2.15, matching
+Cloudflare's reported build environment. Keep the frozen-lockfile check enabled.
+After npm dependency changes, regenerate the Bun lockfile from the npm lockfile in
+an isolated directory and validate a clean frozen install before committing it.

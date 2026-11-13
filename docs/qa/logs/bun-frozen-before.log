@@ -1,0 +1,5 @@
+bun install v1.2.15 (df017990)
+Resolving dependencies
+Resolved, downloaded and extracted [378]
+error: lockfile had changes, but lockfile is frozen
+note: try re-running without --frozen-lockfile and commit the updated lockfile

@@ -186,7 +186,7 @@ Mudanças principais: `src/routes/index.tsx`, `src/styles.css`,
 `scripts/cloudflare.mjs`, `scripts/qa-browser.mjs`, `package.json`, `package-lock.json`,
 `.env.example`, `.gitignore`, `README.md`, `public/favicon.png` e sete fotos otimizadas.
 Evidências e este relatório ficam em `docs/qa/` e `RELATORIO_FINAL.md`.
-O lockfile npm foi atualizado; Bun não foi validado.
+Os lockfiles npm e Bun foram sincronizados; Bun 1.2.15 foi validado após a falha de instalação no CI, conforme a atualização abaixo.
 
 O checkout estava limpo em `ba93929` antes do trabalho. Commit local de implementação:
 `875f45e` — `feat: redesign Lolo Cafe and fix Cloudflare preview runtime`.
@@ -214,6 +214,36 @@ em `d3f049b278b44d8a5ce0b8e4ef32371fc853d134` antes desta atualização document
 Evidências: [tentativa de deploy](docs/qa/logs/release-deploy.log) e
 [testes reexecutados](docs/qa/logs/release-tests.log). Não foi usado `--temporary`,
 pois criaria um destino diferente do Worker autorizado.
+
+## Correção da instalação congelada no Cloudflare
+
+O log de CI fornecido pelo usuário mostrou falha antes da compilação:
+`bun install --frozen-lockfile` com Bun 1.2.15 retornava
+`error: lockfile had changes, but lockfile is frozen`.
+A validação inicial cobriu npm e deixou `bun.lock` desatualizado. O Cloudflare
+seleciona Bun quando encontra esse arquivo, portanto o npm lockfile correto não
+foi suficiente para esse pipeline.
+
+Reproduzi o erro com a mesma versão Bun 1.2.15 em `/tmp/lolo-bun-check`, sem alterar
+as dependências instaladas no checkout de desenvolvimento. Nesse diretório isolado,
+regerei `bun.lock` pela migração suportada de `package-lock.json` usando
+`bun install --lockfile-only --save-text-lockfile`. O novo lockfile preserva as
+versões resolvidas pelo npm e todos os requisitos do manifesto.
+
+Validação com instalação limpa:
+
+- `bun install --frozen-lockfile`: passou; 578 pacotes instalados.
+- `bun run build`: passou; Worker, assets e configuração Wrangler gerados.
+- Nenhum manifesto, versão de dependência, checksum ou proteção de instalação foi
+  alterado para contornar a falha. O comando congelado permanece ativo no CI.
+
+O novo `bun.lock` foi copiado ao repositório para corrigir a próxima instalação no
+Cloudflare. Isso valida a correção local; o resultado do próximo pipeline remoto
+não foi observado nesta sessão, devido ao bloqueio da API GitHub/Cloudflare.
+
+Evidências: [reprodução](docs/qa/logs/bun-frozen-before.log),
+[instalação congelada corrigida](docs/qa/logs/bun-frozen-after.log) e
+[build com Bun](docs/qa/logs/bun-build.log).
 
 ## Pendências concretas para publicação
 
