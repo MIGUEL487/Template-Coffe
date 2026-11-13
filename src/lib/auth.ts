@@ -5,10 +5,10 @@ export interface NeonAuthConfig {
 
 export const neonAuth: NeonAuthConfig = {
   baseUrl:
-    process.env.NEON_AUTH_BASE_URL ||
+    process.env["NEON_AUTH_BASE_URL"] ||
     "https://ep-crimson-pond-b6netkss.neonauth.c-2.sa-east-1.aws.neon.tech/neondb/auth",
   jwksUrl:
-    process.env.NEON_AUTH_JWKS_URL ||
+    process.env["NEON_AUTH_JWKS_URL"] ||
     "https://ep-crimson-pond-b6netkss.neonauth.c-2.sa-east-1.aws.neon.tech/neondb/auth/.well-known/jwks.json",
 };
 

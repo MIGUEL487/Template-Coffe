@@ -1,3 +1,9 @@
+import "@fontsource/cormorant-garamond/latin-400.css";
+import "@fontsource/cormorant-garamond/latin-500.css";
+import "@fontsource/cormorant-garamond/latin-400-italic.css";
+import "@fontsource/jost/latin-400.css";
+import "@fontsource/jost/latin-500.css";
+import "@fontsource/great-vibes/latin-400.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -82,21 +88,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Lolo Café — Vintage Café in Little Italy" },
-      { name: "description", content: "A little taste of Italy, in every cup. Good coffee, beautiful pastries, and a cozy vintage corner in Little Italy." },
+      {
+        name: "description",
+        content:
+          "A little taste of Italy, in every cup. Good coffee, beautiful pastries, and a cozy vintage corner in Little Italy.",
+      },
       { name: "author", content: "Lolo Café" },
       { property: "og:title", content: "Lolo Café — Vintage Café in Little Italy" },
-      { property: "og:description", content: "A little taste of Italy, in every cup. Fresh coffee and pastries in Little Italy." },
+      {
+        property: "og:description",
+        content:
+          "A little taste of Italy, in every cup. Fresh coffee and pastries in Little Italy.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Jost:wght@300;400;500;600&family=Great+Vibes&display=swap" },
     ],
   }),
   shellComponent: RootShell,

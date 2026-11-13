@@ -1,56 +1,51 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { ClientOnly, createFileRoute } from "@tanstack/react-router";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import type Lenis from "lenis";
+import "lenis/dist/lenis.css";
+import {
+  ArrowUpRight,
+  ArrowLeft,
+  ArrowRight,
+  Plus,
+  Minus,
+  ShoppingBag,
+  X,
+  Menu,
+  Coffee,
+} from "lucide-react";
+import { CART_KEY, restoreCart, adjustQuantity, type CartItem } from "@/lib/pickup";
+import hero from "@/assets/v2/hero-cafe-splash-graos.png";
+import cappuccino from "@/assets/v2/produto-cappuccino.png";
+import mocha from "@/assets/v2/produto-mocha-gelado.png";
+import matcha from "@/assets/v2/produto-matcha-gelado.png";
+import spoon from "@/assets/v2/decor-graos-colher.png";
+import croissant from "@/assets/cut-croissant.png";
+import photo1 from "@/assets/optimized/cafe-photo-01.webp";
+import photo2 from "@/assets/optimized/cafe-photo-02.webp";
+import photo3 from "@/assets/optimized/cafe-photo-03.webp";
+import photo4 from "@/assets/optimized/cafe-photo-04.webp";
+import photo5 from "@/assets/optimized/cafe-photo-05.webp";
+import photo9 from "@/assets/optimized/cafe-photo-09.webp";
+import facade from "@/assets/optimized/cafe-photo-10.webp";
 
-// V2 Transparent High-Resolution Assets
-import heroSplashGraos from "@/assets/v2/hero-cafe-splash-graos.png";
-import prodCappuccino from "@/assets/v2/produto-cappuccino.png";
-import prodMocha from "@/assets/v2/produto-mocha-gelado.png";
-import prodMatcha from "@/assets/v2/produto-matcha-gelado.png";
-import breakfastComposition from "@/assets/v2/food-cafe-da-manha-composicao.png";
-import decorSpoonGraos from "@/assets/v2/decor-graos-colher.png";
-
-// Brand Logo & Existing Visual Assets
-import logo from "@/assets/lolo-logo-transparent.png";
-import featureSplash from "@/assets/generated/feature-single-splash.png";
-
-// Real Café Photography (Originals)
-import photo1 from "@/assets/originals/cafe-photo-01.png";
-import photo2 from "@/assets/originals/cafe-photo-02.png";
-import photo3 from "@/assets/originals/cafe-photo-03.png";
-import photo5 from "@/assets/originals/cafe-photo-05.png";
-import photo7 from "@/assets/originals/cafe-photo-07.png";
-import photo10 from "@/assets/originals/cafe-photo-10.png";
+const CafeMotion = lazy(() => import("@/components/cafe-motion"));
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Lolo Café — Vintage Café in Little Italy" },
+      { title: "Lolo Café | A little taste of Little Italy" },
       {
         name: "description",
         content:
-          "A little taste of Italy, in every cup. Good coffee, beautiful pastries, and a cozy corner worth coming back to in Little Italy.",
+          "Coffee, something sweet, and a moment to stay. Explore Lolo Café in Little Italy.",
       },
-      { property: "og:title", content: "Lolo Café — Vintage Café in Little Italy" },
-      {
-        property: "og:description",
-        content: "A little taste of Italy, in every cup. Fresh coffee and pastries in Little Italy.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
 });
 
-export interface CartItem {
-  id: string;
-  name: string;
-  category: string;
-  desc: string;
-  img: string;
-  quantity: number;
-}
-
+export type { CartItem } from "@/lib/pickup";
+// Legacy type retained for consumers; no client-generated order is treated as confirmed.
 export interface ConfirmedOrder {
   orderId: string;
   customerName: string;
@@ -59,1027 +54,667 @@ export interface ConfirmedOrder {
   items: CartItem[];
 }
 
-const featuredFavorites = [
+const favorites = [
   {
     id: "classic-cappuccino",
     name: "Classic Cappuccino",
-    category: "Coffee Classics",
-    desc: "Rich double espresso poured over velvety textured microfoam with traditional Italian latte art.",
-    img: prodCappuccino,
-    imgAlt: "Classic Cappuccino with latte art in paper cup",
+    category: "Coffee classics",
+    desc: "Espresso meets a soft layer of textured milk.",
+    img: cappuccino,
   },
   {
     id: "iced-mocha-glass",
     name: "Iced Mocha Glass",
-    category: "Iced Favorites",
-    desc: "Chilled espresso swirled with dark artisan cocoa, cold whole milk and crystal ice cubes.",
-    img: prodMocha,
-    imgAlt: "Iced mocha with chocolate drizzle in glass can",
+    category: "Iced favorites",
+    desc: "Coffee, cocoa, and milk. A cooler kind of coffee break.",
+    img: mocha,
   },
   {
     id: "iced-matcha-latte",
     name: "Iced Matcha Latte",
-    category: "Matcha Moments",
-    desc: "Vibrant ceremonial grade Japanese matcha layered with fresh cold milk and ice.",
-    img: prodMatcha,
-    imgAlt: "Vibrant iced matcha latte in clear cup",
+    category: "Matcha moments",
+    desc: "Green matcha and cold milk, layered over ice.",
+    img: matcha,
   },
 ];
-
-const pillars = [
-  {
-    num: "1",
-    title: "Little Italy Character",
-    desc: "A warm, vintage-inspired setting with authentic European soul in the heart of the neighborhood.",
-  },
-  {
-    num: "2",
-    title: "A Cozy Escape",
-    desc: "Soft lighting, classic brick details, and inviting tables — a tranquil pause away from the city rush.",
-  },
-  {
-    num: "3",
-    title: "Coffee & Conversation",
-    desc: "A good cup tastes even better when you can slow down, sit back, and share genuine moments.",
-  },
-  {
-    num: "4",
-    title: "Sweet Moments",
-    desc: "Flaky morning croissants, delicate cannoli, and artisan pastries made with love and craft.",
-  },
+const links = [
+  { id: "home", label: "Home" },
+  { id: "favorites", label: "The counter" },
+  { id: "ritual", label: "Our ritual" },
+  { id: "atmosphere", label: "Our café" },
+  { id: "visit", label: "Visit us" },
 ];
-
-const atmosphereGallery = [
+const beats = [
   {
-    img: photo10,
-    title: "Little Italy Storefront",
-    desc: "Our classic brick facade and vintage gold emblem on Mulberry Street",
+    title: "It starts with a bean.",
+    text: "A familiar aroma. A reason to pause before the day begins.",
+    img: spoon,
+    alt: "Coffee beans spilling from a wooden spoon",
+    cutout: true,
   },
   {
-    img: photo1,
-    title: "Warm Interior Tables",
-    desc: "Soft morning light, artisanal soup and quiet corners to read or catch up",
+    title: "Make room for coffee.",
+    text: "Warm cup or something iced? Find your own kind of coffee moment.",
+    img: cappuccino,
+    alt: "Cappuccino with a latte art rosetta",
+    cutout: true,
   },
   {
-    img: photo2,
-    title: "The Espresso Bar",
-    desc: "Traditional espresso machine pulls and handcrafted morning prep",
+    title: "A little something on the side.",
+    text: "Coffee and a pastry. Some things simply belong together.",
+    img: croissant,
+    alt: "A golden croissant, shown as a serving suggestion",
+    cutout: true,
   },
   {
-    img: photo3,
-    title: "Fresh Oven Croissants",
-    desc: "Golden, flaky layers baked fresh every morning the artisan way",
+    title: "And a moment for yourself.",
+    text: "Pull up a chair. Leave a little space in your day for Lolo.",
+    img: photo4,
+    alt: "An iced coffee on a wooden table beside greenery",
+    cutout: false,
   },
-  {
-    img: photo5,
-    title: "Artisanal Confectionery",
-    desc: "Handcrafted cakes and delicate Italian pastries in our display case",
-  },
-  {
-    img: photo7,
-    title: "Intimate Dining Nook",
-    desc: "Warm brick walls, vintage wooden chairs, and welcoming conversation tables",
-  },
-];
-
-const marqueePhrases = [
-  "LOLO CAFÉ",
-  "LITTLE ITALY NYC",
-  "SPECIALTY ROASTS",
-  "FRESH CROISSANTS",
-  "ARTISAN ESPRESSO",
-  "TRADITIONAL LATTE ART",
-  "COZY CORNER",
-  "A LITTLE TASTE OF ITALY",
-];
-
-const NAV_LINKS = [
-  { id: "home", label: "Home", href: "#" },
-  { id: "favorites", label: "Favorites", href: "#favorites" },
-  { id: "breakfast", label: "Morning Rituals", href: "#breakfast" },
-  { id: "about", label: "Our Café", href: "#about" },
-  { id: "atmosphere", label: "Atmosphere", href: "#atmosphere" },
-  { id: "visit", label: "Visit Us", href: "#visit" },
 ];
 
 function Index() {
   const root = useRef<HTMLDivElement>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
-
-  // In-Store Pickup Cart State (persisted in localStorage)
+  const dialog = useRef<HTMLDialogElement>(null);
+  const selection = useRef<HTMLDivElement>(null);
+  const lenis = useRef<Lenis | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [active, setActive] = useState("home");
+  const [selected, setSelected] = useState(0);
+  const [scene, setScene] = useState(0);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [customerName, setCustomerName] = useState("");
-  const [pickupTime, setPickupTime] = useState("In 15 minutes");
-  const [activeOrder, setActiveOrder] = useState<ConfirmedOrder | null>(null);
+  const [storageError, setStorageError] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [ready, setReady] = useState(false);
+  const [motionReady, setMotionReady] = useState(false);
+  const product = favorites[selected]!;
+  const total = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Initialize cart and active order from localStorage on client
   useEffect(() => {
     try {
-      const savedCart = localStorage.getItem("lolo_pickup_cart");
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
-      }
-      const savedOrder = localStorage.getItem("lolo_active_pickup_order");
-      if (savedOrder) {
-        setActiveOrder(JSON.parse(savedOrder));
-      }
+      setCart(restoreCart(localStorage.getItem(CART_KEY), favorites));
     } catch {
-      // safe fallback if storage unavailable
+      setStorageError(true);
     }
+    setReady(true);
   }, []);
-
-  // Save cart changes to localStorage
-  const updateCart = (newCart: CartItem[]) => {
-    setCart(newCart);
+  useEffect(() => {
+    if (!ready) return;
     try {
-      localStorage.setItem("lolo_pickup_cart", JSON.stringify(newCart));
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
     } catch {
-      // storage quota or disabled
+      setStorageError(true);
     }
-  };
+  }, [cart, ready]);
 
-  const addToCart = (product: (typeof featuredFavorites)[0]) => {
-    const existing = cart.find((i) => i.id === product.id);
-    let updated: CartItem[];
-    if (existing) {
-      updated = cart.map((i) =>
-        i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
-      );
-    } else {
-      updated = [
-        ...cart,
-        {
-          id: product.id,
-          name: product.name,
-          category: product.category,
-          desc: product.desc,
-          img: product.img,
-          quantity: 1,
-        },
-      ];
-    }
-    updateCart(updated);
-    setIsCartOpen(true);
-  };
-
-  const changeQuantity = (id: string, delta: number) => {
-    const updated = cart
-      .map((item) => {
-        if (item.id === id) {
-          const newQty = item.quantity + delta;
-          return newQty > 0 ? { ...item, quantity: newQty } : null;
-        }
-        return item;
-      })
-      .filter((item): item is CartItem => item !== null);
-    updateCart(updated);
-  };
-
-  const handlePlacePickupOrder = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (cart.length === 0) return;
-
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const order: ConfirmedOrder = {
-      orderId: `LOLO-NYC-${randomSuffix}`,
-      customerName: customerName.trim() || "Guest",
-      pickupTime,
-      createdAt: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      items: [...cart],
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const current = links
+          .filter(
+            (link) =>
+              (document.getElementById(link.id)?.getBoundingClientRect().top ?? Infinity) <= 150,
+          )
+          .at(-1);
+        const atEnd =
+          window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 3;
+        setActive(atEnd ? "visit" : (current?.id ?? "home"));
+      });
     };
-
-    setActiveOrder(order);
-    try {
-      localStorage.setItem("lolo_active_pickup_order", JSON.stringify(order));
-      localStorage.removeItem("lolo_pickup_cart");
-    } catch {
-      // ignore storage error
-    }
-    setCart([]);
-  };
-
-  const handleClearOrder = () => {
-    setActiveOrder(null);
-    try {
-      localStorage.removeItem("lolo_active_pickup_order");
-    } catch {
-      // ignore
-    }
-  };
-
-  const totalCartCount = cart.reduce((acc, curr) => acc + curr.quantity, 0);
-
-  // Active section observer
-  useEffect(() => {
-    const sectionIds = ["home", "favorites", "breakfast", "about", "atmosphere", "visit"];
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      for (const id of [...sectionIds].reverse()) {
-        const el = id === "home" ? document.body : document.getElementById(id);
-        if (el) {
-          const top = id === "home" ? 0 : el.offsetTop - 140;
-          if (scrollY >= top) {
-            setActiveSection(id);
-            break;
-          }
-        }
-      }
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // GSAP Animations with prefers-reduced-motion fallback
   useEffect(() => {
-    let ctx: { revert: () => void } | undefined;
+    const el = dialog.current;
+    if (!el) return;
+    const scroller = lenis.current;
+    if (cartOpen) {
+      if (!el.open) el.showModal();
+      scroller?.stop();
+    } else if (el.open) el.close();
+    const previous = document.body.style.overflow;
+    if (cartOpen) document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+      scroller?.start();
+    };
+  }, [cartOpen, motionReady]);
 
-    (async () => {
-      const prefersReducedMotion =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      const { gsap } = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsap.registerPlugin(ScrollTrigger);
-
-      ctx = gsap.context(() => {
-        if (prefersReducedMotion) return;
-
-        // Hero splash cups gentle float
-        gsap.to(".hero-cups-floating", {
-          y: -12,
-          rotate: 0.8,
-          duration: 3.8,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        });
-
-        // Hero cups scroll parallax
-        gsap.to(".hero-cups-img", {
-          yPercent: -10,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ".hero-section",
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.5,
-          },
-        });
-
-        // Product Cards subtle entrance
-        gsap.fromTo(
-          ".product-card",
-          { y: 35 },
-          {
-            y: 0,
-            stagger: 0.12,
-            duration: 0.7,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".cards-section",
-              start: "top 95%",
-              once: true,
-            },
-          }
-        );
-
-        // Breakfast composition gentle entrance
-        gsap.fromTo(
-          ".breakfast-img",
-          { y: 30, scale: 0.97 },
-          {
-            y: 0,
-            scale: 1,
-            duration: 0.9,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".breakfast-section",
-              start: "top 90%",
-              once: true,
-            },
-          }
-        );
-
-        // Feature center splash cup gentle float
-        gsap.to(".center-splash-cup", {
-          y: -8,
-          duration: 3,
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inOut",
-        });
-
-        // Closing spoon image gentle slide
-        gsap.fromTo(
-          ".spoon-img",
-          { x: 40 },
-          {
-            x: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: ".closing-section",
-              start: "top 95%",
-              once: true,
-            },
-          }
-        );
-
-        ScrollTrigger.refresh();
-      }, root);
-    })();
-
-    return () => ctx?.revert();
-  }, []);
+  const add = (item: typeof product) => {
+    setCart((current) =>
+      current.some((p) => p.id === item.id)
+        ? adjustQuantity(current, item.id, 1)
+        : [...current, { ...item, quantity: 1 }],
+    );
+    setCartOpen(true);
+  };
 
   return (
-    <div
-      ref={root}
-      className="min-h-screen bg-[#241814] text-[#F5E8D7] selection:bg-[#D8B984] selection:text-[#241814] overflow-x-hidden"
-    >
-      {/* 1. HEADER */}
-      <header className="site-header sticky top-0 z-50 w-full backdrop-blur-md bg-[#241814]/85 border-b border-[#D8B984]/15 transition-colors">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 sm:px-8">
-          {/* Logo brand */}
-          <a href="#" className="flex items-center gap-3.5 group" aria-label="Lolo Café Home">
-            <img
-              src={logo}
-              alt="Lolo Café Logo"
-              width={48}
-              height={48}
-              className="h-11 w-11 object-contain transition-transform group-hover:scale-105"
-            />
-            <div className="flex flex-col">
-              <span className="font-display font-extrabold text-xl tracking-tight text-[#F5E8D7] leading-none">
-                LOLO
-              </span>
-              <span className="font-sans text-[10px] tracking-[0.35em] text-[#D8B984] uppercase font-semibold leading-tight">
-                CAFÉ
-              </span>
-            </div>
-          </a>
-
-          {/* Desktop Capsule Navigation with Active Indicator */}
-          <nav
-            aria-label="Main Navigation"
-            className="hidden lg:flex items-center gap-1 rounded-full border border-white/10 bg-[#382620]/70 p-1.5 shadow-pill backdrop-blur-lg"
+    <div ref={root} className="lolo-site" data-ready={ready} data-motion-ready={motionReady}>
+      <ClientOnly>
+        <Suspense fallback={null}>
+          <CafeMotion
+            root={root}
+            selection={selection}
+            lenis={lenis}
+            selected={selected}
+            beatCount={beats.length}
+            setScene={setScene}
+            onReady={setMotionReady}
+          />
+        </Suspense>
+      </ClientOnly>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <header className="site-header">
+        <a className="wordmark" href="#home" aria-label="Lolo Café home">
+          lolo<span>CAFÉ</span>
+        </a>
+        <nav aria-label="Main navigation" className={mobileOpen ? "main-nav is-open" : "main-nav"}>
+          {links.map((link) => (
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              aria-current={active === link.id ? "location" : undefined}
+              onClick={() => setMobileOpen(false)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <div className="header-actions">
+          <button
+            className="bag-button"
+            onClick={() => setCartOpen(true)}
+            aria-label={`Open pickup bag, ${total} items`}
           >
-            {NAV_LINKS.map((item) => {
-              const isActive = activeSection === item.id;
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className={`rounded-full px-5 py-2 text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
-                    isActive
-                      ? "bg-[#D8B984] text-[#241814] shadow-sm font-bold"
-                      : "text-[#BFAB95] hover:text-[#F5E8D7] hover:bg-white/5"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-          </nav>
-
-          {/* Desktop Right CTA: Pickup Cart & Instagram */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setIsCartOpen(true)}
-              className="relative inline-flex items-center gap-2 rounded-full border border-[#D8B984]/30 bg-[#382620]/60 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#F5E8D7] hover:border-[#D8B984] hover:bg-[#382620] transition-all"
-              aria-label={`View in-store pickup bag with ${totalCartCount} items`}
-            >
-              <span>Pickup Order</span>
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D8B984] text-[11px] font-bold text-[#241814]">
-                {totalCartCount}
-              </span>
-            </button>
-
-            <a
-              href="https://www.instagram.com/lolo.cafe_/"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full bg-[#D8B984] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-[#241814] shadow-pill hover:bg-[#E4C898] transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Instagram
-            </a>
-          </div>
-
-          {/* Mobile Right Controls: Cart Badge & Hamburger */}
-          <div className="flex items-center gap-2.5 lg:hidden">
-            <button
-              type="button"
-              onClick={() => setIsCartOpen(true)}
-              className="relative flex h-10 items-center gap-1.5 rounded-full border border-[#D8B984]/30 bg-[#382620]/70 px-3.5 text-xs font-bold text-[#F5E8D7]"
-              aria-label={`In-store pickup cart: ${totalCartCount} items`}
-            >
-              <span>Pickup</span>
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D8B984] text-[11px] font-black text-[#241814]">
-                {totalCartCount}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#382620]/70 text-[#F5E8D7]"
-              aria-label="Toggle Navigation Menu"
-              aria-expanded={mobileMenuOpen}
-            >
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
-          </div>
+            <ShoppingBag size={18} />
+            <span>Pickup bag</span>
+            <b>{total}</b>
+          </button>
+          <button
+            className="mobile-toggle icon-button"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X /> : <Menu />}
+          </button>
         </div>
-
-        {/* Mobile dropdown menu */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden border-t border-[#D8B984]/15 bg-[#2E1F1A]/95 px-6 py-5 backdrop-blur-xl flex flex-col gap-3">
-            {NAV_LINKS.map((item) => {
-              const isActive = activeSection === item.id;
-              return (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`text-sm font-semibold tracking-wide py-2 px-3 rounded-lg transition-colors ${
-                    isActive ? "bg-[#D8B984] text-[#241814]" : "text-[#BFAB95] hover:text-[#F5E8D7]"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
-            <a
-              href="https://www.instagram.com/lolo.cafe_/"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => setMobileMenuOpen(false)}
-              className="mt-2 text-center rounded-full bg-[#D8B984] py-3 text-xs font-bold uppercase tracking-wider text-[#241814]"
-            >
-              Visit Instagram @lolo.cafe_
-            </a>
-          </nav>
-        )}
       </header>
-
-      {/* 2. HERO SECTION */}
-      <section className="hero-section relative z-10 mx-auto grid max-w-7xl grid-cols-1 md:grid-cols-[1.05fr_1fr] items-center gap-8 px-5 pt-10 pb-14 sm:px-8 sm:pt-14 sm:pb-20">
-        {/* Left Column Text */}
-        <div className="z-10 pt-2 sm:pt-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#D8B984]/30 bg-[#382620]/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-[#D8B984] mb-6">
-            <span>Little Italy · New York</span>
-          </div>
-
-          <h1 className="hero-text-elem font-display text-4xl sm:text-5xl lg:text-[4.4rem] font-extrabold leading-[1.06] text-[#F5E8D7] tracking-tight">
-            A little taste <br />
-            of Italy, in <br />
-            every cup.
-          </h1>
-
-          <p className="hero-text-elem mt-6 max-w-lg text-base sm:text-lg text-[#BFAB95] font-light leading-relaxed">
-            Find your favorite pause on Mulberry Street — exceptional Italian coffee roasts, warm handcrafted pastries, and a cozy corner worth coming back to.
-          </p>
-
-          <div className="hero-text-elem mt-8 flex flex-wrap items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setIsCartOpen(true)}
-              className="inline-flex items-center justify-center rounded-full bg-[#D8B984] px-8 py-3.5 text-sm font-bold uppercase tracking-wider text-[#241814] shadow-card hover:bg-[#E4C898] transition-all hover:scale-[1.02] active:scale-[0.98]"
-            >
-              Order for Pickup
-            </button>
-            <a
-              href="#atmosphere"
-              className="inline-flex items-center justify-center rounded-full border border-[#D8B984]/30 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#F5E8D7] hover:bg-white/5 transition-colors"
-            >
-              See Atmosphere
-            </a>
-          </div>
-        </div>
-
-        {/* Right Column: Hero Splash with Roasted Coffee Beans (V2) */}
-        <div className="hero-cups-wrap relative flex justify-center md:justify-end -mr-2 md:-mr-8">
-          <div className="hero-cups-floating relative w-full max-w-[580px]">
-            <img
-              src={heroSplashGraos}
-              alt="Lolo Café artisan coffee duo with dynamic splash and flying roasted beans"
-              width={1117}
-              height={1408}
-              fetchPriority="high"
-              className="hero-cups-img w-full h-auto object-contain drop-shadow-[0_30px_45px_rgba(0,0,0,0.75)]"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CONTINUOUS MARQUEE TICKER */}
-      <div className="border-y border-[#D8B984]/20 bg-[#1C120F]/90 py-3.5 marquee-container">
-        <div className="marquee-track flex items-center gap-10 font-sans text-xs sm:text-sm font-semibold uppercase tracking-[0.3em] text-[#D8B984]">
-          {[...marqueePhrases, ...marqueePhrases, ...marqueePhrases].map((phrase, idx) => (
-            <span key={idx} className="flex items-center gap-10">
-              <span>{phrase}</span>
-              <span className="text-[#BFAB95]/40 select-none">✦</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* 3. THREE FEATURED CARDS SECTION (V2 PRODUCTS) */}
-      <section id="favorites" className="cards-section relative z-20 mx-auto max-w-7xl px-5 pt-16 pb-24 sm:px-8">
-        <div className="text-center max-w-xl mx-auto mb-20 sm:mb-28">
-          <span className="text-xs uppercase font-bold tracking-[0.3em] text-[#D8B984] block mb-2">
-            A Few Favorites
-          </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#F5E8D7] tracking-tight">
-            Something delicious for every mood.
-          </h2>
-        </div>
-
-        {/* 3 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 pt-8">
-          {featuredFavorites.map((item) => (
-            <article
-              key={item.id}
-              className="product-card group relative rounded-[2rem] border border-[#D8B984]/20 bg-[#382620]/80 px-6 pb-8 pt-32 text-center shadow-card backdrop-blur-md transition-transform hover:-translate-y-2 flex flex-col justify-between"
-            >
-              {/* Product cup sticking out of card top - Consistent 1086x1448px transparent assets */}
-              <div className="absolute inset-x-0 -top-24 sm:-top-28 flex justify-center pointer-events-none">
-                <img
-                  src={item.img}
-                  alt={item.imgAlt}
-                  loading="lazy"
-                  className="h-52 sm:h-60 w-auto object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.65)] transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              <div>
-                <span className="inline-block rounded-full bg-[#241814]/85 border border-[#D8B984]/25 px-3 py-1 text-xs font-semibold text-[#D8B984] mb-3">
-                  {item.category}
-                </span>
-                <h3 className="font-display text-2xl font-bold text-[#F5E8D7] mb-2 tracking-tight">
-                  {item.name}
-                </h3>
-                <p className="text-sm text-[#BFAB95] font-light leading-relaxed mb-6">
-                  {item.desc}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#D8B984]/15 flex flex-col gap-2.5">
-                <button
-                  type="button"
-                  onClick={() => addToCart(item)}
-                  className="w-full rounded-full bg-[#D8B984] py-2.5 text-xs font-bold uppercase tracking-wider text-[#241814] hover:bg-[#E4C898] transition-all hover:scale-[1.01]"
-                >
-                  + Add to Pickup Bag
-                </button>
-                <a
-                  href="https://www.instagram.com/lolo.cafe_/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 text-xs font-semibold text-[#BFAB95] hover:text-[#D8B984] transition-colors"
-                >
-                  Discover on Instagram <span>→</span>
-                </a>
-              </div>
-            </article>
-          ))}
-        </div>
-
-        {/* Central Instagram note */}
-        <div className="mt-12 text-center">
-          <a
-            href="https://www.instagram.com/lolo.cafe_/"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 text-sm text-[#BFAB95] hover:text-[#D8B984] underline underline-offset-8 transition-colors"
-          >
-            See more daily selections on Instagram @lolo.cafe_
-          </a>
-        </div>
-      </section>
-
-      {/* 4. EDITORIAL BREAKFAST SECTION (V2 ASSET) */}
-      <section
-        id="breakfast"
-        className="breakfast-section relative z-10 mx-auto max-w-7xl px-5 py-20 sm:px-8 border-t border-[#D8B984]/15"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
-          {/* Editorial Text */}
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#D8B984]/30 bg-[#382620]/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.25em] text-[#D8B984] mb-4">
-              <span>Morning Rituals</span>
-            </div>
-            <h2 className="font-display text-3xl sm:text-5xl font-extrabold text-[#F5E8D7] tracking-tight leading-tight">
-              The gentle rhythm <br />
-              of a Little Italy morning.
-            </h2>
-            <p className="mt-6 text-base sm:text-lg text-[#BFAB95] font-light leading-relaxed">
-              Before the neighborhood awakens, the warm aroma of freshly pulled espresso and golden flaky croissants fills our room. Take a quiet seat, breathe in the roasted notes, and savor the start of your day with timeless European grace.
+      <main id="main">
+        <section id="home" className="hero section-shell">
+          <div className="hero-copy">
+            <p className="eyebrow">
+              <span className="tiny-flower">✳︎</span> A little corner of Little Italy
             </p>
-            <p className="mt-4 text-xs text-[#8C7A68] italic">
-              *Illustrative morning pairing celebrating our bakery traditions. Fresh artisanal pastries and specialty roasts are served daily à la carte in-store.
+            <h1>
+              A little taste
+              <br />
+              of the <span className="script-line">good life.</span>
+            </h1>
+            <p className="hero-description">
+              Good coffee. Something sweet.
+              <br />
+              And a place to stay a little longer.
             </p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="https://www.instagram.com/lolo.cafe_/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-[#D8B984] px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-[#241814] shadow-pill hover:bg-[#E4C898] transition-all"
-              >
-                Find Today's Fresh Bakes <span>→</span>
+            <div className="hero-buttons">
+              <button className="button primary" onClick={() => setCartOpen(true)}>
+                Order for Pickup <ArrowUpRight size={17} />
+              </button>
+              <a className="button secondary" href="#favorites">
+                Explore Our Menu
               </a>
             </div>
+            <p className="hero-note">Your daily pause, with a little Italian soul.</p>
           </div>
-
-          {/* Visual: Breakfast Composition (V2 Transparent) */}
-          <div className="relative flex justify-center">
+          <div className="hero-art">
+            <div className="hero-orbit" aria-hidden="true" />
+            <div className="hero-orbit inner" aria-hidden="true" />
+            <span className="art-caption">A little coffee. A little joy.</span>
             <img
-              src={breakfastComposition}
-              alt="Illustrative artisanal breakfast pairing with croissant, berries, and cappuccino"
-              loading="lazy"
-              className="breakfast-img w-full max-w-[560px] h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.65)]"
+              className="hero-image"
+              src={hero}
+              alt="Two coffee cups surrounded by an arc of coffee and scattered beans"
+              width="1024"
+              height="1024"
+              fetchPriority="high"
             />
+            <div className="hero-stamp" aria-hidden="true">
+              A little
+              <br />
+              <strong>Lolo</strong>
+              <br />
+              goes a long way
+            </div>
+            <img
+              className="hero-beans"
+              src={spoon}
+              alt=""
+              width="1024"
+              height="1024"
+              aria-hidden="true"
+            />
+            <span className="art-flower" aria-hidden="true">
+              ✳︎
+            </span>
           </div>
-        </div>
-      </section>
-
-      {/* 5. "LOLO CAFÉ IS..." (4 PILLARS AROUND CENTER CUP) */}
-      <section id="about" className="feature-section relative z-10 mx-auto max-w-7xl px-5 py-24 sm:px-8 border-t border-[#D8B984]/15">
-        <h2 className="feature-heading text-center font-display text-3xl sm:text-5xl font-extrabold text-[#F5E8D7] tracking-tight mb-16 sm:mb-20">
-          LOLO CAFÉ <span className="text-[#D8B984]">IS</span>
-        </h2>
-
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] items-center gap-10 lg:gap-8">
-          {/* Left 2 Pillars (1 & 2) */}
-          <div className="space-y-14 lg:space-y-20">
-            {pillars.slice(0, 2).map((p) => (
-              <div key={p.num} className="pillar-item-left relative">
-                <span
-                  aria-hidden="true"
-                  className="absolute -left-3 -top-10 select-none font-display text-8xl lg:text-9xl font-black text-[#D8B984]/10"
-                >
-                  {p.num}
-                </span>
-                <div className="relative pl-8 sm:pl-10">
-                  <h3 className="font-display text-xl sm:text-2xl font-bold text-[#F5E8D7] mb-2 tracking-tight">
-                    {p.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-[#BFAB95] font-light leading-relaxed">
-                    {p.desc}
-                  </p>
-                </div>
+          <a className="scroll-note" href="#favorites">
+            Take a look around <span>↓</span>
+          </a>
+        </section>
+        <div
+          className="marquee"
+          aria-label="Handcrafted coffee. Fresh pastries. Little Italy. Made with care."
+        >
+          <div className="marquee-track" aria-hidden="true">
+            {[0, 1].map((n) => (
+              <div className="marquee-group" key={n}>
+                {["Handcrafted coffee", "Fresh pastries", "Little Italy", "Made with care"].map(
+                  (t) => (
+                    <span key={t}>
+                      {t}
+                      <i>✳︎</i>
+                    </span>
+                  ),
+                )}
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Center Single Splash Cup */}
-          <div className="flex flex-col items-center justify-center my-4 lg:my-0">
-            <div className="relative w-64 sm:w-80 flex justify-center">
-              <img
-                src={featureSplash}
-                alt="Lolo Café Signature Splash Cup"
-                loading="lazy"
-                className="center-splash-cup w-full h-auto object-contain drop-shadow-[0_25px_40px_rgba(0,0,0,0.7)]"
-              />
+        <section id="favorites" className="counter section-shell">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Find your kind of favorite</p>
+              <h2>The Lolo Counter</h2>
             </div>
+            <p>
+              A warm classic. An iced pick-me-up.
+              <br />A little something for every mood.
+            </p>
+          </div>
+          <div className="counter-stage" ref={selection}>
+            <button
+              className="counter-side"
+              onClick={() => setSelected((selected + 2) % 3)}
+              aria-label={`Feature ${favorites[(selected + 2) % 3]!.name}`}
+            >
+              <img
+                src={favorites[(selected + 2) % 3]!.img}
+                alt=""
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <span>{favorites[(selected + 2) % 3]!.name}</span>
+              <ArrowLeft size={19} />
+            </button>
+            <div className="counter-feature">
+              <div className="product-plinth">
+                <span className="plinth-orbit" aria-hidden="true" />
+                <span className="counter-bean bean-one" aria-hidden="true" />
+                <span className="counter-bean bean-two" aria-hidden="true" />
+                <img
+                  className="counter-feature-image"
+                  key={product.id}
+                  src={product.img}
+                  alt={product.name + " promotional serving illustration"}
+                  width="1024"
+                  height="1024"
+                  loading="lazy"
+                />
+              </div>
+              <div className="counter-details" aria-live="polite">
+                <p className="eyebrow">{product.category}</p>
+                <h3>{product.name}</h3>
+                <p>{product.desc}</p>
+                <button className="button primary" onClick={() => add(product)}>
+                  Add to Order <Plus size={16} />
+                </button>
+              </div>
+            </div>
+            <button
+              className="counter-side"
+              onClick={() => setSelected((selected + 1) % 3)}
+              aria-label={`Feature ${favorites[(selected + 1) % 3]!.name}`}
+            >
+              <img
+                src={favorites[(selected + 1) % 3]!.img}
+                alt=""
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <span>{favorites[(selected + 1) % 3]!.name}</span>
+              <ArrowRight size={19} />
+            </button>
+          </div>
+          <div className="counter-controls">
+            <button
+              className="icon-button"
+              aria-label="Previous drink"
+              onClick={() => setSelected((selected + 2) % 3)}
+            >
+              <ArrowLeft />
+            </button>
+            <span>
+              {selected + 1} / {favorites.length}
+            </span>
+            <button
+              className="icon-button"
+              aria-label="Next drink"
+              onClick={() => setSelected((selected + 1) % 3)}
+            >
+              <ArrowRight />
+            </button>
+          </div>
+          <p className="menu-disclaimer">
+            A preview of our coffee favorites. Images are serving illustrations. Pickup ordering is
+            currently in demo mode; prices and availability are not confirmed.
+          </p>
+        </section>
+
+        <section className="food-section section-shell" aria-labelledby="food-title">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Through the café lens</p>
+              <h2 id="food-title">
+                Something sweet.
+                <br />
+                Something to savor.
+              </h2>
+            </div>
+            <p>
+              Real moments from our tables.
+              <br />
+              Your next coffee break, in pictures.
+            </p>
+          </div>
+          <div className="food-gallery">
+            {[
+              {
+                img: photo2,
+                title: "A flaky kind of morning",
+                alt: "A basket of croissants inside Lolo Café",
+              },
+              {
+                img: photo5,
+                title: "A little green in your day",
+                alt: "Two iced green drinks on a café table",
+              },
+              {
+                img: photo9,
+                title: "Save room for something sweet",
+                alt: "A selection of desserts on a wooden café table",
+              },
+            ].map((p) => (
+              <figure className="photo-reveal" key={p.title}>
+                <div className="photo-frame">
+                  <img src={p.img} alt={p.alt} width="768" height="1024" loading="lazy" />
+                </div>
+                <figcaption>{p.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
+        <section id="ritual" className="ritual section-shell">
+          <div className="ritual-title">
+            <p className="eyebrow">No rush. Just a little ritual.</p>
+            <h2>
+              A cup. A bite.
+              <br />A moment.
+            </h2>
+          </div>
+          <div className="ritual-layout">
+            <div className="ritual-visual" aria-hidden="true">
+              <span className="ritual-circle" />
+              {beats.map((beat, i) => (
+                <img
+                  key={beat.title}
+                  src={beat.img}
+                  alt=""
+                  width="1024"
+                  height="1024"
+                  loading="lazy"
+                  className={`${scene === i ? "is-active" : ""} ${beat.cutout ? "cutout" : "ritual-photo"}`}
+                />
+              ))}
+              <span className="ritual-scene-count">A little ritual / {scene + 1}</span>
+            </div>
+            <div className="ritual-story">
+              {beats.map((beat, i) => (
+                <article className={`ritual-beat ritual-beat-${i}`} key={beat.title}>
+                  <span className="beat-number">0{i + 1}</span>
+                  <img
+                    className="mobile-ritual-img"
+                    src={beat.img}
+                    alt={beat.alt}
+                    width="1024"
+                    height="1024"
+                    loading="lazy"
+                  />
+                  <h3>{beat.title}</h3>
+                  <p>{beat.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="atmosphere" className="atmosphere section-shell">
+          <div className="atmosphere-photo photo-reveal">
+            <img
+              src={photo3}
+              alt="Wooden café table with a croissant and coffee, with chairs in the background"
+              width="768"
+              height="1024"
+              loading="lazy"
+            />
+            <span className="photo-tag">A seat. A sip. A slower moment.</span>
+          </div>
+          <div className="atmosphere-copy">
+            <p className="eyebrow">Our café / atmosphere</p>
+            <h2>
+              A little Italy.
+              <br />A lot of heart.
+            </h2>
+            <p>
+              Wooden tables, familiar corners, and coffee worth sitting down for. Lolo is a place to
+              take a breath and enjoy the moment you’re in.
+            </p>
+            <a className="text-link" href="#visit">
+              Come spend a little time <ArrowUpRight size={18} />
+            </a>
+            <div className="detail-photo">
+              <img
+                src={photo1}
+                alt="A bowl and bread on a wooden table beside greenery in the café"
+                width="768"
+                height="1024"
+                loading="lazy"
+              />
+              <p>
+                Small details.
+                <br />
+                Simple pleasures.
+                <br />A place to call your corner.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="visit" className="visit section-shell">
+          <div className="visit-copy">
+            <p className="eyebrow">See you at Lolo</p>
+            <h2>
+              Your next
+              <br />
+              little escape.
+            </h2>
+            <p>
+              Find us in Little Italy. For current hours, directions, and menu availability, check
+              with the café before your visit.
+            </p>
             <a
+              className="button primary"
               href="https://www.instagram.com/lolo.cafe_/"
               target="_blank"
               rel="noreferrer"
-              className="mt-6 inline-flex items-center justify-center rounded-full bg-[#D8B984] px-8 py-3 text-xs font-bold uppercase tracking-wider text-[#241814] shadow-pill hover:bg-[#E4C898] transition-all hover:scale-[1.02]"
             >
-              Explore the Café
+              Visit our Instagram <ArrowUpRight size={17} />
             </a>
+            <span className="visit-signature">With love, Lolo.</span>
           </div>
-
-          {/* Right 2 Pillars (3 & 4) */}
-          <div className="space-y-14 lg:space-y-20">
-            {pillars.slice(2, 4).map((p) => (
-              <div key={p.num} className="pillar-item-right relative">
-                <span
-                  aria-hidden="true"
-                  className="absolute -left-3 -top-10 select-none font-display text-8xl lg:text-9xl font-black text-[#D8B984]/10"
-                >
-                  {p.num}
-                </span>
-                <div className="relative pl-8 sm:pl-10">
-                  <h3 className="font-display text-xl sm:text-2xl font-bold text-[#F5E8D7] mb-2 tracking-tight">
-                    {p.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-[#BFAB95] font-light leading-relaxed">
-                    {p.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. ATMOSPHERE GALLERY (REAL CAFÉ PHOTOGRAPHS) */}
-      <section id="atmosphere" className="relative z-10 mx-auto max-w-7xl px-5 py-20 sm:px-8 border-t border-[#D8B984]/15">
-        <div className="text-center max-w-xl mx-auto mb-14">
-          <span className="text-xs uppercase font-bold tracking-[0.3em] text-[#D8B984] block mb-2">
-            Authentic Atmosphere
-          </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-[#F5E8D7] tracking-tight">
-            Moments from Little Italy
-          </h2>
-          <p className="mt-3 text-sm text-[#BFAB95] font-light">
-            Real scenes, handcrafted coffees, and vintage warmth captured at our Mulberry Street location.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          {atmosphereGallery.map((item) => (
-            <div
-              key={item.title}
-              className="group relative overflow-hidden rounded-2xl border border-[#D8B984]/15 bg-[#382620]/60 shadow-soft"
-            >
-              <div className="aspect-square w-full overflow-hidden">
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#241814]/95 via-[#241814]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                <h4 className="font-display text-sm sm:text-base font-bold text-[#F5E8D7]">{item.title}</h4>
-                <p className="text-[11px] sm:text-xs text-[#BFAB95] font-light mt-1">{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 7. CLOSING BANNER CARD (DECORATED WITH V2 COFFEE BEANS SPOON) */}
-      <section id="visit" className="closing-section relative z-10 mx-auto max-w-7xl px-5 pt-8 pb-24 sm:px-8">
-        <div className="closing-card relative overflow-visible rounded-[2.5rem] border border-[#D8B984]/20 bg-[#382620]/85 p-8 sm:p-14 shadow-card backdrop-blur-md">
-          <div className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] items-center gap-8">
-            {/* Banner Left Copy */}
-            <div className="relative z-10">
-              <span className="text-xs uppercase font-bold tracking-[0.3em] text-[#D8B984] block mb-2">
-                Visit Us in Little Italy
-              </span>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#F5E8D7] leading-tight tracking-tight">
-                Your next favorite coffee moment starts here.
-              </h2>
-              <p className="mt-4 text-sm sm:text-base text-[#BFAB95] font-light leading-relaxed max-w-lg">
-                Discover a welcoming corner in the heart of Little Italy. Come for the espresso, stay for the warmth, conversations, and freshly baked pastries.
-              </p>
-              <div className="mt-3 text-xs text-[#D8B984]/80">
-                <span>Mon closed · Tue–Sun from 8:30am · In-Store Pickup Available</span>
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => setIsCartOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#D8B984] px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-[#241814] shadow-pill hover:bg-[#E4C898] transition-all hover:scale-[1.02]"
-                >
-                  Order for Pickup <span>→</span>
-                </button>
-                <a
-                  href="https://www.instagram.com/lolo.cafe_/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-[#D8B984]/30 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#F5E8D7] hover:bg-white/5 transition-colors"
-                >
-                  Instagram @lolo.cafe_
-                </a>
-              </div>
-            </div>
-
-            {/* Banner Right: Overflowing Coffee Spoon (V2) */}
-            <div className="relative flex justify-center md:justify-end -mr-4 md:-mr-16 -mb-6 md:-mb-12 pointer-events-none">
-              <img
-                src={decorSpoonGraos}
-                alt="Artisan roasted coffee beans in wooden spoon"
-                loading="lazy"
-                className="spoon-img w-64 sm:w-80 md:w-[27rem] h-auto object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.7)]"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. FOOTER */}
-      <footer className="border-t border-[#D8B984]/15 bg-[#1C120F] text-[#BFAB95] py-14">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-10 border-b border-[#D8B984]/10">
-            {/* Brand */}
-            <div className="flex items-center gap-3">
-              <img src={logo} alt="Lolo Café" width={38} height={38} className="h-9 w-9 object-contain" />
-              <span className="font-display text-lg font-bold text-[#F5E8D7] tracking-tight">
-                LOLO CAFÉ
-              </span>
-              <span className="text-xs text-[#BFAB95] border-l border-[#D8B984]/20 pl-3">
-                Little Italy · New York
-              </span>
-            </div>
-
-            {/* Footer Navigation */}
-            <nav className="flex flex-wrap items-center justify-center gap-6 text-xs font-semibold uppercase tracking-wider">
-              {NAV_LINKS.map((link) => (
-                <a key={link.id} href={link.href} className="hover:text-[#F5E8D7] transition-colors">
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="https://www.instagram.com/lolo.cafe_/"
-                target="_blank"
-                rel="noreferrer"
-                className="text-[#D8B984] hover:underline"
-              >
-                Instagram
-              </a>
-            </nav>
-          </div>
-
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8C7A68]">
-            <p>© {new Date().getFullYear()} Lolo Café. All rights reserved.</p>
-            <p>Crafted with love for Little Italy.</p>
-          </div>
-        </div>
+          <figure className="storefront photo-reveal">
+            <img
+              src={facade}
+              alt="The real Lolo Café brick storefront, with its script sign above the entrance"
+              width="768"
+              height="1024"
+              loading="lazy"
+            />
+            <figcaption>Our little corner, from the outside.</figcaption>
+          </figure>
+        </section>
+      </main>
+      <footer className="site-footer">
+        <a className="wordmark" href="#home">
+          lolo<span>CAFÉ</span>
+        </a>
+        <p>
+          A little taste of the good life.
+          <br />
+          Little Italy
+        </p>
+        <a href="https://www.instagram.com/lolo.cafe_/" target="_blank" rel="noreferrer">
+          Instagram <ArrowUpRight size={16} />
+        </a>
+        <small>© {new Date().getFullYear()} Lolo Café</small>
       </footer>
 
-      {/* IN-STORE PICKUP DRAWER / MODAL */}
-      {isCartOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="pickup-drawer-title"
-          className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm animate-in fade-in"
-        >
-          <div
-            className="relative flex h-full w-full max-w-md flex-col justify-between border-l border-[#D8B984]/20 bg-[#2E1F1A] p-6 shadow-2xl sm:p-8 overflow-y-auto"
-          >
-            {/* Header */}
+      <dialog
+        ref={dialog}
+        className="pickup-dialog"
+        aria-labelledby="pickup-title"
+        onCancel={() => setCartOpen(false)}
+        onClose={() => setCartOpen(false)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setCartOpen(false);
+        }}
+      >
+        <div className="pickup-panel" data-lenis-prevent>
+          <div className="pickup-header">
             <div>
-              <div className="flex items-center justify-between border-b border-[#D8B984]/15 pb-4">
-                <div>
-                  <h3 id="pickup-drawer-title" className="font-display text-xl font-bold text-[#F5E8D7]">
-                    In-Store Pickup Bag
-                  </h3>
-                  <p className="text-xs text-[#D8B984]">Pay in Person at the Counter</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsCartOpen(false)}
-                  className="rounded-full border border-white/10 p-2 text-[#BFAB95] hover:text-[#F5E8D7]"
-                  aria-label="Close Pickup Drawer"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Active Confirmed Order View */}
-              {activeOrder ? (
-                <div className="mt-6 rounded-2xl border border-[#D8B984]/30 bg-[#241814] p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs uppercase font-bold text-[#D8B984]">Order Confirmed</span>
-                    <span className="text-xs text-[#BFAB95]">{activeOrder.createdAt}</span>
-                  </div>
-                  <h4 className="font-display text-2xl font-extrabold text-[#F5E8D7] tracking-tight">
-                    {activeOrder.orderId}
-                  </h4>
-                  <p className="mt-1 text-xs text-[#BFAB95]">
-                    Customer: <strong className="text-[#F5E8D7]">{activeOrder.customerName}</strong> · Pickup: {activeOrder.pickupTime}
-                  </p>
-
-                  <div className="my-4 border-t border-[#D8B984]/10 pt-3 space-y-2">
-                    {activeOrder.items.map((i) => (
-                      <div key={i.id} className="flex justify-between text-xs text-[#F5E8D7]">
-                        <span>{i.quantity}x {i.name}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="rounded-lg bg-[#382620] p-3 text-[11px] text-[#BFAB95] leading-relaxed">
-                    ☕ <strong>Payment is collected at the counter.</strong> Show this screen to your barista when you arrive at Lolo Café.
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleClearOrder}
-                    className="mt-4 w-full rounded-full border border-[#D8B984]/40 py-2.5 text-xs font-bold uppercase text-[#D8B984] hover:bg-[#D8B984]/10 transition-colors"
-                  >
-                    Start New Order
-                  </button>
-                </div>
-              ) : cart.length === 0 ? (
-                <div className="py-16 text-center text-[#BFAB95]">
-                  <p className="text-sm">Your pickup bag is empty.</p>
-                  <p className="mt-1 text-xs text-[#8C7A68]">
-                    Choose from our coffee classics and iced favorites.
-                  </p>
-                </div>
-              ) : (
-                /* Cart Items List */
-                <div className="mt-6 divide-y divide-[#D8B984]/10">
-                  {cart.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 py-4">
-                      <img
-                        src={item.img}
-                        alt={item.name}
-                        className="h-14 w-14 object-contain rounded-lg bg-[#241814] p-1 border border-[#D8B984]/10"
-                      />
-                      <div className="flex-1">
-                        <h4 className="text-sm font-bold text-[#F5E8D7]">{item.name}</h4>
-                        <span className="text-[11px] text-[#D8B984]">{item.category}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
+              <p className="eyebrow">Pay in person at pickup</p>
+              <h2 id="pickup-title">Your pickup bag</h2>
+            </div>
+            <button
+              className="icon-button"
+              aria-label="Close pickup bag"
+              onClick={() => setCartOpen(false)}
+            >
+              <X />
+            </button>
+          </div>
+          <div className="demo-notice">
+            <strong>Demo only — no order will be sent.</strong>
+            <p>
+              Online pickup is not connected yet. Prices, availability, and pickup times must be
+              confirmed with the café.
+            </p>
+          </div>
+          {storageError && (
+            <p role="status">Your browser cannot save this bag. It will be lost when you leave.</p>
+          )}
+          {cart.length === 0 ? (
+            <div className="empty-bag">
+              <Coffee size={40} />
+              <h3>A little something?</h3>
+              <p>Your bag is empty. Explore the counter to find a favorite.</p>
+              <a href="#favorites" className="button primary" onClick={() => setCartOpen(false)}>
+                Explore Our Menu
+              </a>
+            </div>
+          ) : (
+            <>
+              <div className="pickup-items">
+                {cart.map((item) => (
+                  <div className="pickup-item" key={item.id}>
+                    <img src={item.img} alt="" width="70" height="70" />
+                    <div>
+                      <h3>{item.name}</h3>
+                      <span>{item.category}</span>
+                      <div className="quantity">
                         <button
-                          type="button"
-                          onClick={() => changeQuantity(item.id, -1)}
-                          className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-xs hover:bg-white/10"
+                          className="icon-button"
                           aria-label={`Decrease ${item.name}`}
+                          onClick={() => setCart((c) => adjustQuantity(c, item.id, -1))}
                         >
-                          -
+                          <Minus size={16} />
                         </button>
-                        <span className="w-5 text-center text-xs font-bold text-[#F5E8D7]">{item.quantity}</span>
+                        <output aria-label={`${item.name} quantity`}>{item.quantity}</output>
                         <button
-                          type="button"
-                          onClick={() => changeQuantity(item.id, 1)}
-                          className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-xs hover:bg-white/10"
+                          className="icon-button"
                           aria-label={`Increase ${item.name}`}
+                          disabled={item.quantity >= 20}
+                          onClick={() => setCart((c) => adjustQuantity(c, item.id, 1))}
                         >
-                          +
+                          <Plus size={16} />
                         </button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* In-Store Pickup Submission Form */}
-            {!activeOrder && cart.length > 0 && (
-              <form onSubmit={handlePlacePickupOrder} className="border-t border-[#D8B984]/15 pt-5 space-y-4">
-                <div className="rounded-xl bg-[#241814] p-3 text-xs text-[#BFAB95] border border-[#D8B984]/15">
-                  <p className="font-semibold text-[#D8B984]">Pay in Person</p>
-                  <p className="text-[11px] mt-0.5">
-                    No credit card is billed online. Payment is settled at the counter upon arrival via Cash, Card, or Apple Pay.
-                  </p>
-                </div>
-
-                <div>
-                  <label htmlFor="customer-name" className="block text-xs font-semibold text-[#F5E8D7] mb-1">
-                    Your Name
-                  </label>
+                  </div>
+                ))}
+              </div>
+              <div className="bag-summary">
+                <span>Items in your bag</span>
+                <strong aria-live="polite">{total}</strong>
+              </div>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <fieldset disabled>
+                  <legend>Pickup details · available when ordering opens</legend>
+                  <label htmlFor="pickup-name">Your name</label>
+                  <input id="pickup-name" autoComplete="given-name" placeholder="Name for pickup" />
+                  <label htmlFor="pickup-contact">Email</label>
                   <input
-                    id="customer-name"
-                    type="text"
-                    required
-                    placeholder="e.g. Maria"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    className="w-full rounded-xl border border-[#D8B984]/30 bg-[#241814] px-4 py-2.5 text-xs text-[#F5E8D7] placeholder-[#8C7A68] focus:border-[#D8B984] focus:outline-none"
+                    id="pickup-contact"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
                   />
-                </div>
-
-                <div>
-                  <label htmlFor="pickup-time" className="block text-xs font-semibold text-[#F5E8D7] mb-1">
-                    Estimated Pickup Time
-                  </label>
-                  <select
-                    id="pickup-time"
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
-                    className="w-full rounded-xl border border-[#D8B984]/30 bg-[#241814] px-4 py-2.5 text-xs text-[#F5E8D7] focus:border-[#D8B984] focus:outline-none"
-                  >
-                    <option value="In 10 minutes">In 10 minutes</option>
-                    <option value="In 15 minutes">In 15 minutes</option>
-                    <option value="In 30 minutes">In 30 minutes</option>
-                    <option value="In 45 minutes">In 45 minutes</option>
+                  <label htmlFor="pickup-time">Pickup time</label>
+                  <select id="pickup-time">
+                    <option>Confirmed by the café when ordering opens</option>
                   </select>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-[#D8B984] py-3 text-xs font-bold uppercase tracking-wider text-[#241814] shadow-card hover:bg-[#E4C898] transition-all"
-                >
-                  Confirm In-Store Pickup ({totalCartCount} items)
+                </fieldset>
+                <button className="button primary" type="submit" disabled>
+                  Pickup ordering unavailable
                 </button>
+                <p className="form-note">
+                  No payment is collected online. This demo does not reserve items or a pickup time.
+                </p>
               </form>
-            )}
-          </div>
+              <button className="text-link" onClick={() => setCart([])}>
+                Clear bag
+              </button>
+            </>
+          )}
         </div>
-      )}
+      </dialog>
     </div>
   );
 }

@@ -36,11 +36,7 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 export const DEFAULT_TENANT_ID = "e1081b0e-95ff-4f50-b67e-f40c8aad1855";
 
 export function getDb() {
-  const connectionString =
-    process.env.DATABASE_URL ||
-    process.env.NEON_DATABASE_URL ||
-    // Fallback connection to Neon pooler for project divine-queen-03540399
-    "postgresql://neondb_owner:npg_9PInbUNxz5Vi@ep-crimson-pond-b6netkss-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require";
+  const connectionString = process.env["DATABASE_URL"] || process.env["NEON_DATABASE_URL"];
 
   if (!connectionString) {
     return null;
@@ -50,8 +46,8 @@ export function getDb() {
 }
 
 export async function getTenantData(targetTenantId?: string): Promise<TenantData> {
-  const tenantId = targetTenantId || process.env.DEFAULT_TENANT_ID || DEFAULT_TENANT_ID;
-  
+  const tenantId = targetTenantId || process.env["DEFAULT_TENANT_ID"] || DEFAULT_TENANT_ID;
+
   if (!UUID_REGEX.test(tenantId)) {
     return { tenant: null, products: [] };
   }
@@ -111,14 +107,14 @@ export async function getTenantData(targetTenantId?: string): Promise<TenantData
       ORDER BY created_at ASC
     `;
 
-    const products: TenantProduct[] = (rawProducts || []).map((p: any) => ({
-      id: p.id,
-      name: p.name,
-      description: p.description || "",
-      price_cents: Number(p.price_cents) || 0,
-      category: p.category || "",
-      is_available: Boolean(p.is_available),
-      image_url: p.image_url || null,
+    const products: TenantProduct[] = (rawProducts || []).map((p: Record<string, unknown>) => ({
+      id: String(p["id"]),
+      name: String(p["name"]),
+      description: String(p["description"] || ""),
+      price_cents: Number(p["price_cents"]) || 0,
+      category: String(p["category"] || ""),
+      is_available: Boolean(p["is_available"]),
+      image_url: p["image_url"] ? String(p["image_url"]) : null,
     }));
 
     return { tenant, products };
