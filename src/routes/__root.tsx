@@ -81,14 +81,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lolo Café" },
-      { name: "description", content: "Vintage café in the heart of Little Italy" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lolo Café" },
-      { property: "og:description", content: "Vintage café in the heart of Little Italy" },
+      { title: "Lolo Café — Vintage Café in Little Italy" },
+      { name: "description", content: "A little taste of Italy, in every cup. Good coffee, beautiful pastries, and a cozy vintage corner in Little Italy." },
+      { name: "author", content: "Lolo Café" },
+      { property: "og:title", content: "Lolo Café — Vintage Café in Little Italy" },
+      { property: "og:description", content: "A little taste of Italy, in every cup. Fresh coffee and pastries in Little Italy." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      
     ],
     links: [
       {
@@ -96,7 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Jost:wght@300;400;500;600&family=Great+Vibes&display=swap" },
     ],
   }),
   shellComponent: RootShell,
