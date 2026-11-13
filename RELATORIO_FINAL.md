@@ -6,9 +6,10 @@ Data: 2026-11-13. Branch de trabalho: `work`. Implementação: `875f45e`.
 
 Redesign implementado e validado no Worker local com Chromium real. Desenvolvimento,
 compilação, tipagem, lint, empacotamento Cloudflare e testes de navegador funcionam.
-**Não houve merge, push nem deploy.** A suíte completa ainda tem duas falhas de
-integração Neon, e este ambiente não tem autenticação Cloudflare. A versão publicada
-não foi alterada nem validada remotamente.
+**A integração na main foi realizada por fast-forward após autorização do usuário.**
+O deploy direto foi tentado e bloqueado por ausência de autenticação Cloudflare.
+A suíte completa ainda tem duas falhas de integração Neon. A versão publicada não
+pôde ser validada remotamente; uma publicação automática externa após o push não foi confirmada.
 
 ## Diagnóstico do run / Cloudflare
 
@@ -190,7 +191,29 @@ O lockfile npm foi atualizado; Bun não foi validado.
 O checkout estava limpo em `ba93929` antes do trabalho. Commit local de implementação:
 `875f45e` — `feat: redesign Lolo Cafe and fix Cloudflare preview runtime`.
 O relatório e as evidências são registrados em um commit documental separado.
-Nenhum force push, rebase, merge ou envio ao remoto foi realizado.
+Após autorização explícita do usuário, os dois commits foram integrados à `main`
+remota por fast-forward, sem conflitos, force push ou rebase. O remoto foi confirmado
+em `d3f049b278b44d8a5ce0b8e4ef32371fc853d134` antes desta atualização documental.
+
+## Atualização após autorização de merge e deploy
+
+- `git fetch origin main`: a main permanecia em `ba93929`; nenhuma alteração remota concorrente.
+- `git merge-base --is-ancestor origin/main HEAD`: passou.
+- `git push origin HEAD:refs/heads/main`: passou, avanço `ba93929..d3f049b`.
+- `git ls-remote origin refs/heads/main`: confirmou os commits no remoto.
+- `NODE_USE_ENV_PROXY=1 npm test`: novamente 9 passaram e 2 falharam na integração Neon.
+  A autorização para integrar foi dada pelo usuário após essas falhas terem sido informadas.
+- `node scripts/cloudflare.mjs whoami`: confirmou ausência de autenticação.
+- `CI=1 npm run deploy:wrangler`: exit 1, com exigência explícita de
+  `CLOUDFLARE_API_TOKEN` no ambiente não interativo. Nenhum deploy direto concluído.
+- A sondagem HTTPS de `api.cloudflare.com/client/v4/user` foi negada pelo proxy
+  com HTTP 403 no CONNECT. A política efetiva ainda não inclui esse destino.
+- A API GitHub também está bloqueada pela rede, embora Git fetch/push funcione;
+  não foi possível observar pipelines externos pela API.
+
+Evidências: [tentativa de deploy](docs/qa/logs/release-deploy.log) e
+[testes reexecutados](docs/qa/logs/release-tests.log). Não foi usado `--temporary`,
+pois criaria um destino diferente do Worker autorizado.
 
 ## Pendências concretas para publicação
 
