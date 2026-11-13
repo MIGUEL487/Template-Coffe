@@ -92,6 +92,41 @@
   will-change: transform, opacity;
 }
 
+/* Continuous Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer base {
   * {
     border-color: var(--border);
