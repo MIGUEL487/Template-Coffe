@@ -1,0 +1,225 @@
+
+> preview
+> node scripts/cloudflare.mjs dev --config .output/server/wrangler.json --ip 0.0.0.0 --port 4173
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ ⛅️ wrangler 4.161.0 (update available 4.162.0)
+───────────────────────────────────────────────
+Your Worker has access to the following bindings:
+Binding                                                             Resource                  Mode
+env.ASSETS                                                          Assets                    local
+env.DEFAULT_TENANT_ID ("e1081b0e-95ff-4f50-b67e-f40c8aad1855")      Environment Variable      local
+
+[wrangler:warn] Unable to fetch the `Request.cf` object! Falling back to a default placeholder...
+Error: Request was cancelled.
+    at new DOMException (node:internal/per_context/domexception:76:18)
+    at makeAppropriateNetworkError (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/response.js:488:38)
+    at httpNetworkFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1971:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async httpNetworkOrCacheFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1600:29)
+    at async httpFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1142:33)
+    at async mainFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:596:20)
+Attaching additional modules:
+┌─────────────────────────────────────────┬──────┬─────────────┐
+│ Name                                    │ Type │ Size        │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _chunks/ssr-renderer.mjs                │ esm  │ 0.59 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/@tanstack/react-router+[...].mjs  │ esm  │ 694.24 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/@tanstack/router-core+[...].mjs   │ esm  │ 102.67 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/gsap+gsap__react+react.mjs        │ esm  │ 168.74 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/gsap.mjs                          │ esm  │ 96.64 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/h3+rou3+srvx.mjs                  │ esm  │ 16.92 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/h3-v2+rou3+srvx.mjs               │ esm  │ 9.65 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/hookable.mjs                      │ esm  │ 1.15 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/lenis.mjs                         │ esm  │ 32.11 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/lucide-react.mjs                  │ esm  │ 7.29 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/react+tanstack__react-query.mjs   │ esm  │ 2.88 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/seroval.mjs                       │ esm  │ 15.70 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/tanstack__history.mjs             │ esm  │ 12.21 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/tanstack__query-core.mjs          │ esm  │ 111.38 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _runtime.mjs                            │ esm  │ 1.15 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/createCsrfMiddleware-B2To0gPJ.mjs  │ esm  │ 3.04 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/empty-plugin-adapters-D9UWiqvJ.mjs │ esm  │ 0.22 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/router-DqWASRQr.mjs                │ esm  │ 7.08 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/routes-D-yc7W9m.mjs                │ esm  │ 37.83 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/server-DtP_NeLP.mjs                │ esm  │ 63.31 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/ssr.mjs                            │ esm  │ 4.45 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/start-RKGGYzjZ.mjs                 │ esm  │ 1.50 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _tanstack-start-manifest_v-DSx0eF8m.mjs │ esm  │ 0.59 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ Total (23 modules)                      │      │ 1391.32 KiB │
+└─────────────────────────────────────────┴──────┴─────────────┘
+⎔ Starting local server...
+[wrangler:warn] Unable to fetch the `Request.cf` object! Falling back to a default placeholder...
+Error: Request was cancelled.
+    at new DOMException (node:internal/per_context/domexception:76:18)
+    at makeAppropriateNetworkError (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/response.js:488:38)
+    at httpNetworkFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1971:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async httpNetworkOrCacheFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1600:29)
+    at async httpFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1142:33)
+    at async mainFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:596:20)
+[wrangler:info] ✨ Parsed 1 valid header rule.
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://127.0.0.1:4173/cdn-cgi/local/explorer/api
+Useful routes:
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api/local/workers - local Workers and bindings
+  POST http://127.0.0.1:4173/cdn-cgi/local/explorer/api/local/scheduled?worker=<name> - invoke a Worker's scheduled handler; cron is required (see the OpenAPI schema for the full request)
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api/d1/database - D1 databases
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api/r2/buckets - R2 buckets
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api/workflows - Workflows
+  POST http://127.0.0.1:4173/cdn-cgi/local/explorer/api/local/observability/query - run a read-only SQL query (SELECT/WITH only) over captured request traces and console logs. Tables: spans, logs (read attributes via json(attributes)). Example:
+    curl -X POST http://127.0.0.1:4173/cdn-cgi/local/explorer/api/local/observability/query -H 'Content-Type: application/json' -d '{"sql":"SELECT service, name, outcome, duration_ms FROM spans WHERE parent_id IS NULL LIMIT 20"}'
+  POST http://127.0.0.1:4173/cdn-cgi/local/explorer/api/local/observability/clear - clear all captured traces and logs
+If the routes above don't cover what you need, fetch the full OpenAPI schema (large - use only as a last resort):
+  GET http://127.0.0.1:4173/cdn-cgi/local/explorer/api - OpenAPI schema
+[wrangler:info] Ready on http://0.0.0.0:4173
+[wrangler:info] - http://127.0.0.1:4173
+[wrangler:info] - http://172.26.91.254:4173
+[wrangler:info] - http://172.31.5.46:4173
+✘ [ERROR] Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>) (status 500)
+  caused by: Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>)
+
+
+✘ [ERROR] Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>) (status 500)
+  caused by: Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>)
+
+
+[wrangler:info] GET / 500 Internal Server Error (69ms)
+⎔ Reloading local server...
+[wrangler:warn] Unable to fetch the `Request.cf` object! Falling back to a default placeholder...
+Error: Request was cancelled.
+    at new DOMException (node:internal/per_context/domexception:76:18)
+    at makeAppropriateNetworkError (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/response.js:488:38)
+    at httpNetworkFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1971:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async httpNetworkOrCacheFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1600:29)
+    at async httpFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1142:33)
+    at async mainFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:596:20)
+⎔ Local server updated and ready
+✘ [ERROR] Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>) (status 500)
+  caused by: Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>)
+
+
+✘ [ERROR] Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>) (status 500)
+  caused by: Error: Disallowed operation called within global scope. Asynchronous I/O (ex: fetch() or connect()), setting a timeout, and generating random values are not allowed within global scope. To fix this error, perform this operation within a handler. https://developers.cloudflare.com/workers/runtime-apis/handlers/
+      at #constructTimer (node-internal:internal_timers:57:15)
+      at new Timeout (node-internal:internal_timers:52:43)
+      at setTimeout (node-internal:internal_timers:104:12)
+      at _req (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1377:13)
+      at _tick (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1352:20)
+      at Object.wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1380:5)
+      at _wake (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1414:35)
+      at _createPlugin (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:1098:3)
+      at null.<anonymous> (file:///workspace/Template-Coffe/.output/server/_libs/gsap+gsap__react+react.mjs:3065:11)
+      at Array.forEach (<anonymous>)
+
+
+[wrangler:info] GET / 500 Internal Server Error (61ms)
+🪵  Logs were written to "/workspace/Template-Coffe/.wrangler/config/.wrangler/logs/wrangler-2026-11-13_22-45-24_550.log"
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice

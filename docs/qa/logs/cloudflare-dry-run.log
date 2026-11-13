@@ -1,0 +1,60 @@
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+
+ ⛅️ wrangler 4.161.0 (update available 4.162.0)
+───────────────────────────────────────────────
+Attaching additional modules:
+┌─────────────────────────────────────────┬──────┬─────────────┐
+│ Name                                    │ Type │ Size        │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _chunks/ssr-renderer.mjs                │ esm  │ 0.59 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/@tanstack/react-router+[...].mjs  │ esm  │ 694.21 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/@tanstack/router-core+[...].mjs   │ esm  │ 102.67 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/h3+rou3+srvx.mjs                  │ esm  │ 16.92 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/h3-v2+rou3+srvx.mjs               │ esm  │ 9.65 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/hookable.mjs                      │ esm  │ 1.15 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/lucide-react.mjs                  │ esm  │ 7.29 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/react+tanstack__react-query.mjs   │ esm  │ 18.91 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/seroval.mjs                       │ esm  │ 15.70 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/tanstack__history.mjs             │ esm  │ 12.21 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/tanstack__query-core.mjs          │ esm  │ 111.38 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _runtime.mjs                            │ esm  │ 1.15 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/createCsrfMiddleware-B2To0gPJ.mjs  │ esm  │ 3.04 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/empty-plugin-adapters-D9UWiqvJ.mjs │ esm  │ 0.22 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/router-h2aTy38i.mjs                │ esm  │ 6.96 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/routes-immp9jIq.mjs                │ esm  │ 35.00 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/server-DXFb0peR.mjs                │ esm  │ 63.26 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/ssr.mjs                            │ esm  │ 4.45 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/start-RKGGYzjZ.mjs                 │ esm  │ 1.50 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _tanstack-start-manifest_v-BR5zondW.mjs │ esm  │ 0.59 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ Total (20 modules)                      │      │ 1106.85 KiB │
+└─────────────────────────────────────────┴──────┴─────────────┘
+✨ Read 34 files from the assets directory /workspace/Template-Coffe/.output/public
+Total Upload: 1122.90 KiB / gzip: 247.78 KiB
+Your Worker has access to the following bindings:
+Binding                                                             Resource                  
+env.ASSETS                                                          Assets                    
+env.DEFAULT_TENANT_ID ("e1081b0e-95ff-4f50-b67e-f40c8aad1855")      Environment Variable      
+
+--dry-run: exiting now.

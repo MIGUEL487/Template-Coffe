@@ -1,0 +1,104 @@
+
+> cf:preview
+> wrangler dev --config .output/server/wrangler.json --ip 0.0.0.0 --port 8787
+
+▲ [WARNING] Proxy environment variables detected. We'll use your proxy for fetch requests.
+
+
+✘ [ERROR] Failed to write to log file Error: ENOENT: no such file or directory, mkdir '/home/agent/.config/.wrangler'
+
+      at async Object.mkdir (node:internal/fs/promises:1571:10)
+      at async ensureDirectoryExists (/workspace/Template-Coffe/node_modules/wrangler/wrangler-dist/cli.js:70856:3)
+      at async /workspace/Template-Coffe/node_modules/wrangler/wrangler-dist/cli.js:70937:7
+      at async Mutex.runWith (/workspace/Template-Coffe/node_modules/wrangler/node_modules/miniflare/dist/src/index.js:76504:16)
+      at async appendToDebugLogFile (/workspace/Template-Coffe/node_modules/wrangler/wrangler-dist/cli.js:70935:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'mkdir',
+    path: '/home/agent/.config/.wrangler'
+  }
+
+
+✘ [ERROR] Would have written: 
+
+  --- 2026-11-13T22:30:21.750Z debug
+  🪵  Writing logs to "/home/agent/.config/.wrangler/logs/wrangler-2026-11-13_22-30-21_435.log"
+  ---
+  
+
+
+
+ ⛅️ wrangler 4.161.0
+────────────────────
+Your Worker has access to the following bindings:
+Binding                                                             Resource                  Mode
+env.ASSETS                                                          Assets                    local
+env.DEFAULT_TENANT_ID ("e1081b0e-95ff-4f50-b67e-f40c8aad1855")      Environment Variable      local
+
+[wrangler:warn] Unable to fetch the `Request.cf` object! Falling back to a default placeholder...
+Error: Request was cancelled.
+    at new DOMException (node:internal/per_context/domexception:76:18)
+    at makeAppropriateNetworkError (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/response.js:488:38)
+    at httpNetworkFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1971:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async httpNetworkOrCacheFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1600:29)
+    at async httpFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:1142:33)
+    at async mainFetch (/workspace/Template-Coffe/node_modules/wrangler/node_modules/undici/lib/web/fetch/index.js:596:20)
+Attaching additional modules:
+┌─────────────────────────────────────────┬──────┬─────────────┐
+│ Name                                    │ Type │ Size        │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _chunks/ssr-renderer.mjs                │ esm  │ 0.59 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/@tanstack/react-router+[...].mjs  │ esm  │ 694.20 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/@tanstack/router-core+[...].mjs   │ esm  │ 102.67 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/gsap.mjs                          │ esm  │ 248.11 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/h3+rou3+srvx.mjs                  │ esm  │ 16.92 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/h3-v2+rou3+srvx.mjs               │ esm  │ 9.65 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/hookable.mjs                      │ esm  │ 1.15 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/react+tanstack__react-query.mjs   │ esm  │ 18.91 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/seroval.mjs                       │ esm  │ 15.70 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/tanstack__history.mjs             │ esm  │ 12.21 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _libs/tanstack__query-core.mjs          │ esm  │ 111.38 KiB  │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _runtime.mjs                            │ esm  │ 1.41 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/createCsrfMiddleware-B2To0gPJ.mjs  │ esm  │ 3.04 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/empty-plugin-adapters-D9UWiqvJ.mjs │ esm  │ 0.22 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/router-Cl-0ckBI.mjs                │ esm  │ 7.66 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/routes-BQine0pC.mjs                │ esm  │ 47.40 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/server-BP8lL7-S.mjs                │ esm  │ 63.26 KiB   │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/ssr.mjs                            │ esm  │ 4.45 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _ssr/start-RKGGYzjZ.mjs                 │ esm  │ 1.50 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ _tanstack-start-manifest_v-CLjFYSWw.mjs │ esm  │ 0.55 KiB    │
+├─────────────────────────────────────────┼──────┼─────────────┤
+│ Total (20 modules)                      │      │ 1360.97 KiB │
+└─────────────────────────────────────────┴──────┴─────────────┘
+
+✘ [ERROR] ENOENT: no such file or directory, mkdir '/home/agent/.config/.wrangler'
+
+
+If you think this is a bug then please create an issue at https://github.com/cloudflare/workers-sdk/issues/new/choose
+Note that there is a newer version of Wrangler available (4.162.0). Consider checking whether upgrading resolves this error.
+🪵  Logs were written to "/home/agent/.config/.wrangler/logs/wrangler-2026-11-13_22-30-21_435.log"
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice

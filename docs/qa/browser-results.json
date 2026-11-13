@@ -1,0 +1,63 @@
+{
+  "base": "http://127.0.0.1:4173",
+  "results": [
+    {
+      "width": 320,
+      "http": 200,
+      "overflow": false,
+      "cart": "passed",
+      "persistence": "passed",
+      "images": "passed",
+      "navigation": "passed"
+    },
+    {
+      "width": 375,
+      "http": 200,
+      "overflow": false,
+      "cart": "passed",
+      "persistence": "passed",
+      "images": "passed",
+      "navigation": "passed"
+    },
+    {
+      "width": 768,
+      "http": 200,
+      "overflow": false,
+      "cart": "passed",
+      "persistence": "passed",
+      "images": "passed",
+      "navigation": "passed"
+    },
+    {
+      "width": 1024,
+      "http": 200,
+      "overflow": false,
+      "cart": "passed",
+      "persistence": "passed",
+      "images": "passed",
+      "navigation": "passed"
+    },
+    {
+      "width": 1440,
+      "http": 200,
+      "overflow": false,
+      "cart": "passed",
+      "persistence": "passed",
+      "images": "passed",
+      "navigation": "passed"
+    },
+    {
+      "width": 1920,
+      "http": 200,
+      "overflow": false,
+      "cart": "passed",
+      "persistence": "passed",
+      "images": "passed",
+      "navigation": "passed"
+    },
+    {
+      "reducedMotion": "passed"
+    }
+  ],
+  "errors": []
+}
