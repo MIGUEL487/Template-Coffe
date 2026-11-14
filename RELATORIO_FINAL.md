@@ -2,6 +2,47 @@
 
 Data: 2026-11-13. Branch de trabalho: `work`. Implementação: `875f45e`.
 
+## Ajuste solicitado: hero anterior, header compacto e nova sacola
+
+Esta rodada substitui a orientação anterior de separar os copos no hero: foi
+restaurado `hero-cafe-splash-graos.png`, com os dois copos e o splash, conforme o
+pedido mais recente. Removida a camada extra de drink e seu parallax separado.
+
+O header passou de 94 para 72 px no desktop e de 78 para 64 px no mobile. A logo
+oficial continua transparente, agora sem o disco café, borda ou moldura de fundo.
+O dourado ganhou um leve ajuste de contraste para leitura sobre o creme.
+Âncoras e menu mobile acompanham a nova altura.
+
+A sacola foi redesenhada como uma folha lateral com cabeçalho e resumo fixos,
+lista rolável, miniaturas em PNG, cartões de produto, quantidade em controle
+segmentado e remoção direta por item. O estado vazio oferece uma sugestão de café.
+Os detalhes de retirada ficam em disclosure recolhido. Total de itens sempre
+visível, sem inventar preços. O aviso de demonstração e a submissão desabilitada
+continuam explícitos; não há promessa de envio ou reserva de pedido.
+
+Validação desta rodada: build, lint sem erros (seis avisos anteriores), tipagem,
+dry-run Cloudflare e Worker local passaram. Chromium validou 320, 375, 768, 1024,
+1440 e 1920 px sem erros de console ou imagens quebradas. Foram exercitados:
+quantidades, persistência após recarga, remoção direta, sugestão no estado vazio,
+rodapé visível, foco/Escape, catálogo, navegação, resize e movimento reduzido.
+Também foram verificados o hero restaurado, as alturas do header e a ausência de
+fundo na logo. Não houve alteração de dependências ou lockfiles.
+Os testes externos Neon não foram reexecutados nesta alteração visual; as
+limitações registradas anteriormente continuam pendentes. Publicação remota não
+foi confirmada; a integração Git segue a autorização já dada pelo usuário.
+
+Evidências: [hero](docs/qa/bag/hero-desktop.webp),
+[hero mobile](docs/qa/bag/hero-mobile.webp),
+[sacola desktop](docs/qa/bag/bag-desktop.webp),
+[sacola mobile](docs/qa/bag/bag-mobile.webp),
+[320 px](docs/qa/bag/bag-small.webp),
+[estado vazio](docs/qa/bag/bag-empty.webp) e
+[resultados](docs/qa/bag/results.json).
+Logs: [navegador](docs/qa/bag/logs/browser.log),
+[build](docs/qa/bag/logs/build.log), [lint](docs/qa/bag/logs/lint.log),
+[tipagem](docs/qa/bag/logs/typecheck.log) e
+[dry-run](docs/qa/bag/logs/cloudflare-dry-run.log).
+
 ## Rodada final: logo oficial, PNGs por item e vitrine ampliada
 
 Implementado o prompt de atualização final, partindo da main em `1e5a158`.

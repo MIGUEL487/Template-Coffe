@@ -94,12 +94,6 @@ export default function CafeMotion({
           ease: "none",
           scrollTrigger: { trigger: "#home", start: "top top", end: "bottom top", scrub: 0.7 },
         });
-        gsap.to(".hero-milk-cup", {
-          y: 28,
-          rotation: -3,
-          ease: "none",
-          scrollTrigger: { trigger: "#home", start: "top top", end: "bottom top", scrub: 0.8 },
-        });
         gsap.to(".hero-beans", {
           y: -70,
           rotation: -12,

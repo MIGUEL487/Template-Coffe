@@ -12,9 +12,12 @@ import {
   X,
   Menu,
   Coffee,
+  Trash2,
+  ChevronDown,
+  LockKeyhole,
 } from "lucide-react";
 import { CART_KEY, restoreCart, adjustQuantity, type CartItem } from "@/lib/pickup";
-import hero from "@/assets/v2/hero-cafe-splash-solo.png";
+import hero from "@/assets/v2/hero-cafe-splash-graos.png";
 import cappuccino from "@/assets/v2/produto-cappuccino.png";
 import mocha from "@/assets/v2/produto-mocha-gelado.png";
 import matcha from "@/assets/v2/produto-matcha-gelado.png";
@@ -313,17 +316,10 @@ function Index() {
             <img
               className="hero-image"
               src={hero}
-              alt="An individual coffee cup beneath a splash of coffee"
+              alt="Two coffee cups surrounded by a splash of coffee and beans"
               width="1024"
               height="1024"
               fetchPriority="high"
-            />
-            <img
-              className="hero-milk-cup"
-              src={milkDrink}
-              alt="An individual iced coffee with milk"
-              width="704"
-              height="944"
             />
             <div className="hero-stamp" aria-hidden="true">
               A little
@@ -675,100 +671,163 @@ function Index() {
         <div className="pickup-panel" data-lenis-prevent>
           <div className="pickup-header">
             <div>
-              <p className="eyebrow">Pay in person at pickup</p>
-              <h2 id="pickup-title">Your pickup bag</h2>
+              <p className="eyebrow">A little something to go</p>
+              <h2 id="pickup-title">
+                Your pickup bag <span className="bag-count">{total}</span>
+              </h2>
             </div>
             <button
               className="icon-button"
               aria-label="Close pickup bag"
               onClick={() => setCartOpen(false)}
             >
-              <X />
+              <X size={20} />
             </button>
           </div>
-          <div className="demo-notice">
-            <strong>Demo only — no order will be sent.</strong>
-            <p>
-              Online pickup is not connected yet. Prices, availability, and pickup times must be
-              confirmed with the café.
-            </p>
-          </div>
-          {storageError && (
-            <p role="status">Your browser cannot save this bag. It will be lost when you leave.</p>
-          )}
-          {cart.length === 0 ? (
-            <div className="empty-bag">
-              <Coffee size={40} />
-              <h3>A little something?</h3>
-              <p>Your bag is empty. Explore the counter to find a favorite.</p>
-              <a href="#favorites" className="button primary" onClick={() => setCartOpen(false)}>
-                Explore Our Menu
-              </a>
+          <div className="pickup-body">
+            <div className="demo-notice">
+              <span className="demo-label">
+                <LockKeyhole size={14} /> Preview bag
+              </span>
+              <strong>Demo only — no order will be sent.</strong>
+              <p>Save a few favorites here. Online pickup is not open yet.</p>
             </div>
-          ) : (
-            <>
-              <div className="pickup-items">
-                {cart.map((item) => (
-                  <div className="pickup-item" key={item.id}>
-                    <img src={item.img} alt="" width="70" height="70" />
-                    <div>
-                      <h3>{item.name}</h3>
-                      <span>{item.category}</span>
-                      <div className="quantity">
-                        <button
-                          className="icon-button"
-                          aria-label={`Decrease ${item.name}`}
-                          onClick={() => setCart((c) => adjustQuantity(c, item.id, -1))}
-                        >
-                          <Minus size={16} />
-                        </button>
-                        <output aria-label={`${item.name} quantity`}>{item.quantity}</output>
-                        <button
-                          className="icon-button"
-                          aria-label={`Increase ${item.name}`}
-                          disabled={item.quantity >= 20}
-                          onClick={() => setCart((c) => adjustQuantity(c, item.id, 1))}
-                        >
-                          <Plus size={16} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="bag-summary">
-                <span>Items in your bag</span>
-                <strong aria-live="polite">{total}</strong>
-              </div>
-              <form onSubmit={(e) => e.preventDefault()}>
-                <fieldset disabled>
-                  <legend>Pickup details · available when ordering opens</legend>
-                  <label htmlFor="pickup-name">Your name</label>
-                  <input id="pickup-name" autoComplete="given-name" placeholder="Name for pickup" />
-                  <label htmlFor="pickup-contact">Email</label>
-                  <input
-                    id="pickup-contact"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                  />
-                  <label htmlFor="pickup-time">Pickup time</label>
-                  <select id="pickup-time">
-                    <option>Confirmed by the café when ordering opens</option>
-                  </select>
-                </fieldset>
-                <button className="button primary" type="submit" disabled>
-                  Pickup ordering unavailable
-                </button>
-                <p className="form-note">
-                  No payment is collected online. This demo does not reserve items or a pickup time.
+            {storageError && (
+              <p className="storage-warning" role="status">
+                Your browser cannot save this bag. It will be lost when you leave.
+              </p>
+            )}
+            {cart.length === 0 ? (
+              <div className="empty-bag">
+                <div className="empty-bag-symbol">
+                  <ShoppingBag size={36} strokeWidth={1} />
+                  <span aria-hidden="true">✧</span>
+                </div>
+                <h3>Make it a little Lolo.</h3>
+                <p>
+                  Your bag is empty. Start with a coffee,
+                  <br />
+                  or find something sweet at the counter.
                 </p>
-              </form>
-              <button className="text-link" onClick={() => setCart([])}>
-                Clear bag
-              </button>
-            </>
-          )}
+                <a href="#favorites" className="button primary" onClick={() => setCartOpen(false)}>
+                  Explore Our Menu <ArrowUpRight size={16} />
+                </a>
+                <div className="bag-suggestion">
+                  <span>A good place to start</span>
+                  <button onClick={() => add(favorites[0]!)} aria-label="Add Classic Cappuccino">
+                    <img src={favorites[0]!.img} alt="" width="60" height="80" />
+                    <span>
+                      Classic Cappuccino<small>Coffee classics</small>
+                    </span>
+                    <Plus size={18} />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="bag-list-heading">
+                  <span>Your favorites</span>
+                  <button className="bag-clear" onClick={() => setCart([])}>
+                    Clear bag
+                  </button>
+                </div>
+                <div className="pickup-items">
+                  {cart.map((item) => (
+                    <article className="pickup-item" key={item.id}>
+                      <div className="bag-item-art">
+                        <img src={item.img} alt="" width="90" height="120" />
+                      </div>
+                      <div className="bag-item-info">
+                        <span className="bag-category">{item.category}</span>
+                        <h3>{item.name}</h3>
+                        <div className="quantity">
+                          <button
+                            aria-label={`Decrease ${item.name}`}
+                            onClick={() => setCart((c) => adjustQuantity(c, item.id, -1))}
+                          >
+                            <Minus size={15} />
+                          </button>
+                          <output aria-label={`${item.name} quantity`}>{item.quantity}</output>
+                          <button
+                            aria-label={`Increase ${item.name}`}
+                            disabled={item.quantity >= 20}
+                            onClick={() => setCart((c) => adjustQuantity(c, item.id, 1))}
+                          >
+                            <Plus size={15} />
+                          </button>
+                        </div>
+                      </div>
+                      <button
+                        className="bag-remove"
+                        aria-label={`Remove ${item.name}`}
+                        onClick={() => setCart((c) => c.filter((p) => p.id !== item.id))}
+                      >
+                        <Trash2 size={17} />
+                      </button>
+                    </article>
+                  ))}
+                </div>
+                <a
+                  className="bag-keep-browsing"
+                  href="#favorites"
+                  onClick={() => setCartOpen(false)}
+                >
+                  <Plus size={16} /> Add another little favorite
+                </a>
+                <details className="pickup-details">
+                  <summary>
+                    Pickup details{" "}
+                    <span>
+                      Not open yet <ChevronDown size={15} />
+                    </span>
+                  </summary>
+                  <p>
+                    Contact and pickup options will be available when online ordering opens.
+                    Availability and times must be confirmed by the café.
+                  </p>
+                  <fieldset disabled>
+                    <legend>Pickup details · available when ordering opens</legend>
+                    <label htmlFor="pickup-name">Your name</label>
+                    <input
+                      id="pickup-name"
+                      autoComplete="given-name"
+                      placeholder="Name for pickup"
+                    />
+                    <label htmlFor="pickup-contact">Email</label>
+                    <input
+                      id="pickup-contact"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                    />
+                    <label htmlFor="pickup-time">Pickup time</label>
+                    <select id="pickup-time">
+                      <option>Confirmed by the café when ordering opens</option>
+                    </select>
+                  </fieldset>
+                </details>
+              </>
+            )}
+          </div>
+          <div className="pickup-footer">
+            {cart.length > 0 ? (
+              <>
+                <div className="bag-summary">
+                  <span>In your bag</span>
+                  <strong aria-live="polite">
+                    {total} {total === 1 ? "item" : "items"}
+                  </strong>
+                </div>
+                <p className="bag-price-note">Prices and availability are confirmed by the café.</p>
+                <button className="button primary" disabled>
+                  <LockKeyhole size={15} /> Pickup ordering unavailable
+                </button>
+              </>
+            ) : (
+              <p className="empty-footer-note">A coffee. A treat. A little pause.</p>
+            )}
+            <p className="form-note">Pay in person at pickup. No online payment or reservation.</p>
+          </div>
         </div>
       </dialog>
     </div>

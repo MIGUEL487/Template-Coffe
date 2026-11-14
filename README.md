@@ -88,7 +88,7 @@ an isolated directory and validate a clean frozen install before committing it.
 ### Product cutouts and motion audit
 
 The counter contains six illustrative selections, all using existing transparent
-PNG assets. The hero's coffee and milk drink are separate PNG layers. The official
+PNG assets. The hero uses the restored two-cup coffee splash composition. The official
 logo is used in the header and footer; real rectangular café/storefront photos
 are reserved for contextual atmosphere and visit sections.
 

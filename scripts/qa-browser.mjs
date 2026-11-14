@@ -42,6 +42,17 @@ try {
     assert.equal(overflow, false, `Horizontal overflow at ${width}`);
     await page.screenshot({ path: `${output}/hero-${width}.png` });
     assert.equal(
+      await page.locator(".site-header").evaluate((el) => el.getBoundingClientRect().height),
+      width <= 760 ? 64 : 72,
+    );
+    assert.equal(
+      await page
+        .locator(".site-header .wordmark")
+        .evaluate((el) => getComputedStyle(el).backgroundColor),
+      "rgba(0, 0, 0, 0)",
+    );
+    assert.match(await page.locator(".hero-image").getAttribute("src"), /hero-cafe-splash-graos/);
+    assert.equal(
       await page.locator(".site-header .wordmark img").getAttribute("alt"),
       "Lolo Café official logo",
     );
@@ -94,6 +105,12 @@ try {
     );
     await dialog.getByRole("button", { name: "Increase Iced Mocha Glass" }).click();
     assert.equal(await dialog.locator("output").innerText(), "2");
+    await page.screenshot({ path: `${output}/bag-filled-${width}.png` });
+    assert.ok(
+      await page
+        .locator(".pickup-footer")
+        .evaluate((el) => el.getBoundingClientRect().bottom <= innerHeight),
+    );
     // Native dialog contains keyboard focus and closes with Escape.
     await page.keyboard.press("Tab");
     assert.equal(
@@ -108,6 +125,10 @@ try {
     assert.equal(await dialog.locator("output").innerText(), "2");
     await dialog.getByRole("button", { name: "Decrease Iced Mocha Glass" }).click();
     await dialog.getByRole("button", { name: "Decrease Iced Mocha Glass" }).click();
+    assert.match(await dialog.innerText(), /Your bag is empty/);
+    await page.screenshot({ path: `${output}/bag-empty-${width}.png` });
+    await dialog.getByRole("button", { name: "Add Classic Cappuccino", exact: true }).click();
+    await dialog.getByRole("button", { name: "Remove Classic Cappuccino", exact: true }).click();
     assert.match(await dialog.innerText(), /Your bag is empty/);
     await page.keyboard.press("Escape");
     assert.equal(await page.evaluate(() => localStorage.getItem("lolo_active_pickup_order")), null);
@@ -180,7 +201,10 @@ try {
       assert.ok(
         await page.evaluate(
           () =>
-            Math.abs(document.querySelector("#favorites").getBoundingClientRect().top - 100) < 30,
+            Math.abs(
+              document.querySelector("#favorites").getBoundingClientRect().top -
+                (document.querySelector(".site-header").getBoundingClientRect().height + 10),
+            ) < 25,
         ),
       );
     }
