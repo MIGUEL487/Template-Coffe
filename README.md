@@ -84,3 +84,19 @@ The frozen install and production build were verified with Bun 1.2.15, matching
 Cloudflare's reported build environment. Keep the frozen-lockfile check enabled.
 After npm dependency changes, regenerate the Bun lockfile from the npm lockfile in
 an isolated directory and validate a clean frozen install before committing it.
+
+### Product cutouts and motion audit
+
+The counter contains six illustrative selections, all using existing transparent
+PNG assets. The hero's coffee and milk drink are separate PNG layers. The official
+logo is used in the header and footer; real rectangular café/storefront photos
+are reserved for contextual atmosphere and visit sections.
+
+```sh
+QA_BASE_URL=http://127.0.0.1:4173 node scripts/qa-cutouts.mjs
+```
+
+This browser audit reads the actual PNG alpha pixels and verifies that the counter
+floats with motion enabled and stops when reduced motion is selected. The main
+browser suite also checks wheel interpolation, mobile touch scrolling, selection
+of all six favorites, and adding the food selections to the demo bag.

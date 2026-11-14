@@ -32,7 +32,12 @@ export default function CafeMotion({
       cleanup();
       cleanup = () => {};
       if (media.matches) return;
-      const instance = new Lenis({ anchors: true, duration: 0.9, smoothWheel: true });
+      const instance = new Lenis({
+        anchors: true,
+        duration: 0.9,
+        smoothWheel: true,
+        syncTouch: false,
+      });
       lenis.current = instance;
       instance.on("scroll", ScrollTrigger.update);
       const tick = (time: number) => instance.raf(time * 1000);
@@ -55,6 +60,26 @@ export default function CafeMotion({
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".site-header", { y: -12, opacity: 0, duration: 0.6, ease: "power2.out" });
+        gsap.from(".counter-pick", {
+          y: 22,
+          opacity: 0,
+          stagger: 0.06,
+          duration: 0.55,
+          scrollTrigger: {
+            trigger: ".counter-picker",
+            start: "top 95%",
+            toggleActions: "play none none reverse",
+          },
+        });
+        gsap.from(".counter-side", {
+          y: 18,
+          opacity: 0,
+          stagger: 0.1,
+          duration: 0.6,
+          scrollTrigger: { trigger: ".counter-stage", start: "top 85%" },
+        });
+
         gsap.from(".hero-copy > *", {
           y: 28,
           opacity: 0,
@@ -68,6 +93,12 @@ export default function CafeMotion({
           rotation: 3,
           ease: "none",
           scrollTrigger: { trigger: "#home", start: "top top", end: "bottom top", scrub: 0.7 },
+        });
+        gsap.to(".hero-milk-cup", {
+          y: 28,
+          rotation: -3,
+          ease: "none",
+          scrollTrigger: { trigger: "#home", start: "top top", end: "bottom top", scrub: 0.8 },
         });
         gsap.to(".hero-beans", {
           y: -70,
@@ -115,23 +146,43 @@ export default function CafeMotion({
 
   useGSAP(
     () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      gsap.from(".counter-feature-image", {
-        y: 20,
-        rotation: -5,
-        opacity: 0,
-        duration: 0.45,
-        ease: "power2.out",
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const float = gsap.to(".counter-feature-float", {
+          y: -9,
+          duration: 2.4,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          paused: true,
+        });
+        ScrollTrigger.create({
+          trigger: ".counter-stage",
+          start: "top bottom",
+          end: "bottom top",
+          onEnter: () => float.play(),
+          onEnterBack: () => float.play(),
+          onLeave: () => float.pause(),
+          onLeaveBack: () => float.pause(),
+        });
+        gsap.from(".counter-feature-image", {
+          y: 20,
+          rotation: -5,
+          opacity: 0,
+          duration: 0.45,
+          ease: "power2.out",
+        });
+        gsap.from(".counter-bean", {
+          x: -18,
+          y: 16,
+          rotation: -35,
+          opacity: 0,
+          stagger: 0.08,
+          duration: 0.5,
+        });
+        gsap.from(".counter-details > *", { y: 8, opacity: 0, stagger: 0.04, duration: 0.35 });
       });
-      gsap.from(".counter-bean", {
-        x: -18,
-        y: 16,
-        rotation: -35,
-        opacity: 0,
-        stagger: 0.08,
-        duration: 0.5,
-      });
-      gsap.from(".counter-details > *", { y: 8, opacity: 0, stagger: 0.04, duration: 0.35 });
+      return () => mm.revert();
     },
     { scope: selection, dependencies: [selected], revertOnUpdate: true },
   );

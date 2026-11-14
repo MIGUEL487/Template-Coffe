@@ -14,7 +14,11 @@ const errors = [];
 try {
   for (const width of [320, 375, 768, 1024, 1440, 1920]) {
     console.log("Checking width", width);
-    const context = await browser.newContext({ viewport: { width, height: 1000 } });
+    const context = await browser.newContext({
+      viewport: { width, height: 1000 },
+      hasTouch: width <= 760,
+      isMobile: width <= 760,
+    });
     const page = await context.newPage();
     page.on("response", (r) => {
       if (r.status() >= 400) errors.push({ width, error: `HTTP ${r.status()} ${r.url()}` });
@@ -37,7 +41,45 @@ try {
     );
     assert.equal(overflow, false, `Horizontal overflow at ${width}`);
     await page.screenshot({ path: `${output}/hero-${width}.png` });
-    await page.getByRole("button", { name: "Next drink", exact: true }).click();
+    assert.equal(
+      await page.locator(".site-header .wordmark img").getAttribute("alt"),
+      "Lolo Café official logo",
+    );
+    assert.equal(await page.locator(".counter-pick").count(), 6);
+    if (width === 1440) {
+      await page.mouse.move(800, 700);
+      await page.mouse.wheel(0, 700);
+      await page.waitForTimeout(60);
+      const early = await page.evaluate(() => scrollY);
+      await page.waitForTimeout(1600);
+      const late = await page.evaluate(() => scrollY);
+      assert.ok(
+        early > 0 && early < 650 && late > 650,
+        `Lenis wheel interpolation: ${early} -> ${late}`,
+      );
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(250);
+    }
+    if (width === 375) {
+      const cdp = await context.newCDPSession(page);
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x: 180, y: 700 }],
+      });
+      for (const y of [650, 600, 550, 500, 450]) {
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: [{ x: 180, y }],
+        });
+        await page.waitForTimeout(35);
+      }
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      await page.waitForTimeout(400);
+      assert.ok((await page.evaluate(() => scrollY)) > 50, "Mobile touch scroll");
+      await cdp.detach();
+    }
+
+    await page.getByRole("button", { name: "Next favorite", exact: true }).click();
     await page.waitForFunction(
       () => document.querySelector(".counter-details h3").textContent === "Iced Mocha Glass",
     );
@@ -69,6 +111,18 @@ try {
     assert.match(await dialog.innerText(), /Your bag is empty/);
     await page.keyboard.press("Escape");
     assert.equal(await page.evaluate(() => localStorage.getItem("lolo_active_pickup_order")), null);
+    for (const name of ["Golden Croissants", "Chocolate Dessert", "Fruit Drink"]) {
+      await page.getByRole("button", { name: `Choose ${name}`, exact: true }).click();
+      assert.equal(await page.locator(".counter-details h3").innerText(), name);
+      await page.getByRole("button", { name: "Add to Order", exact: true }).click();
+      await dialog.getByRole("heading", { name, exact: true }).waitFor();
+      await page.keyboard.press("Escape");
+    }
+    await page.getByRole("button", { name: "Choose Classic Cappuccino", exact: true }).click();
+    await page.getByRole("button", { name: "Previous favorite", exact: true }).click();
+    assert.equal(await page.locator(".counter-details h3").innerText(), "Fruit Drink");
+    await page.getByRole("button", { name: "Next favorite", exact: true }).click();
+    assert.equal(await page.locator(".counter-details h3").innerText(), "Classic Cappuccino");
     // Scroll the actual page to load all photos, exercise reversible reveals, and verify nav state.
     await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = "auto";

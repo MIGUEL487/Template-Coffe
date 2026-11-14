@@ -2,6 +2,73 @@
 
 Data: 2026-11-13. Branch de trabalho: `work`. Implementação: `875f45e`.
 
+## Rodada final: logo oficial, PNGs por item e vitrine ampliada
+
+Implementado o prompt de atualização final, partindo da main em `1e5a158`.
+A validação desta rodada está em `docs/qa/update/`, separada das evidências anteriores.
+
+- Header e rodapé usam o arquivo oficial `lolo-logo-transparent.png`, sem recriar o
+  nome em tipografia. A base café dá contraste ao traço dourado, em desktop e mobile.
+- Hero utiliza agora arquivos separados para o café com splash e o drink com leite;
+  cada camada é um PNG transparente independente. Não usei a composição de dois copos.
+- Counter ampliado de três para seis opções: Classic Cappuccino, Iced Mocha Glass,
+  Iced Matcha Latte, Golden Croissants, Chocolate Dessert e Fruit Drink. Inclui
+  seleção direta por miniaturas, botões anterior/próximo com volta nas extremidades,
+  item central em bandeja elíptica e inclusão funcional na sacola demonstrativa.
+- Produtos, galeria de sugestões e todas as etapas do ritual usam recortes PNG.
+  Os arquivos existentes foram preservados, sem fundos retangulares nas composições.
+  As fotos retangulares remanescentes mostram contexto do ambiente e a fachada real
+  em Visit us, conforme a exceção expressa no prompt. Não foi inventada uma fachada.
+- Adicionadas entrada do header, stagger nas miniaturas/laterais, hover, flutuação
+  leve do item central apenas enquanto visível e parallax independente do drink.
+  Mudanças de preferência de movimento reduzido também interrompem a flutuação.
+- Lenis está ativo: o teste mediu deslocamento intermediário após uma roda de 700 px
+  e conclusão posterior do movimento. No mobile, um gesto de toque real do Chromium
+  confirmou a rolagem; o toque mantém a física nativa, com Lenis/ScrollTrigger ativos.
+  Movimento reduzido usa rolagem nativa e interrompe as animações contínuas.
+
+### Verificações desta rodada
+
+| Verificação                                                             | Resultado                                                                              |
+| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Bun 1.2.15, instalação limpa `bun install --frozen-lockfile`            | Passou; 578 pacotes, sem mudar manifestos ou lockfiles                                 |
+| Build de produção e Worker local                                        | Passaram; HTTP 200                                                                     |
+| `npm run typecheck`                                                     | Passou                                                                                 |
+| `npm run lint`                                                          | Exit 0; apenas seis avisos preexistentes nos componentes UI                            |
+| `wrangler deploy --dry-run` pelo wrapper do projeto                     | Passou; nenhum deploy direto realizado                                                 |
+| Chromium em 320, 375, 768, 1024, 1440 e 1920 px                         | Passou; nenhum overflow horizontal, erro de console ou imagem quebrada                 |
+| Sacola, quantidades, persistência, alimentos, seleção e wrap do counter | Passaram                                                                               |
+| Âncoras, menu mobile, resize, histórico, rolagem reversa                | Passaram                                                                               |
+| Auditoria dos dez PNGs utilizados nos destaques                         | Passou; pixels transparentes e assunto visível verificados no canvas real do navegador |
+| Flutuação ativa e interrupção com reduced motion                        | Passaram, com comparação de transforms entre frames                                    |
+| Suíte Vitest completa                                                   | 9 passaram; continuam as 2 falhas externas Neon já documentadas, sem relaxar asserções |
+
+O produto continua explicitamente em demonstração; não foram inventados preços,
+disponibilidade, horários ou confirmações de pedido. Nenhuma dependência foi adicionada.
+As condições da atualização visual e do Worker foram verificadas antes da integração
+automática solicitada. As falhas Neon já conhecidas não foram apresentadas como resolvidas.
+A API externa Cloudflare continua inacessível neste ambiente, portanto não alego
+validação remota nem publicação direta desta rodada.
+
+### Evidências atuais
+
+[Hero desktop](docs/qa/update/hero-desktop.webp) ·
+[Hero mobile](docs/qa/update/hero-mobile.webp) ·
+[Counter](docs/qa/update/counter-desktop.webp) ·
+[Seletor dos seis itens](docs/qa/update/counter-picker.webp) ·
+[Galeria PNG](docs/qa/update/cutout-gallery.webp) ·
+[Mobile completo](docs/qa/update/full-mobile.webp) ·
+[Fachada contextual](docs/qa/update/visit-mobile.webp).
+
+Resultados: [navegador](docs/qa/update/results.json) e
+[pixels alpha + movimento](docs/qa/update/cutout-audit.json).
+Logs: [instalação](docs/qa/update/logs/frozen-install.log),
+[build](docs/qa/update/logs/build.log), [lint](docs/qa/update/logs/lint.log),
+[tipagem](docs/qa/update/logs/typecheck.log), [navegador](docs/qa/update/logs/browser.log),
+[recortes](docs/qa/update/logs/cutouts.log),
+[dry-run](docs/qa/update/logs/cloudflare-dry-run.log) e
+[Vitest](docs/qa/update/logs/vitest.log).
+
 ## Resultado e limites
 
 Redesign implementado e validado no Worker local com Chromium real. Desenvolvimento,

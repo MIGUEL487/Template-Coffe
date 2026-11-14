@@ -1,0 +1,76 @@
+{
+  "audit": [
+    {
+      "file": "/assets/lolo-logo-transparent-PMPQQPP4.png",
+      "transparentPixels": 973422,
+      "foregroundPixels": 59713,
+      "total": 1054729,
+      "png": true
+    },
+    {
+      "file": "/assets/hero-cafe-splash-solo-Cu7BKXsg.png",
+      "transparentPixels": 888126,
+      "foregroundPixels": 633526,
+      "total": 1572528,
+      "png": true
+    },
+    {
+      "file": "/assets/produto-cappuccino-MW2NBxZX.png",
+      "transparentPixels": 792656,
+      "foregroundPixels": 763720,
+      "total": 1572528,
+      "png": true
+    },
+    {
+      "file": "/assets/produto-mocha-gelado-_pgk8FA0.png",
+      "transparentPixels": 907698,
+      "foregroundPixels": 643995,
+      "total": 1572528,
+      "png": true
+    },
+    {
+      "file": "/assets/produto-matcha-gelado-BSUnd-rM.png",
+      "transparentPixels": 795075,
+      "foregroundPixels": 758871,
+      "total": 1572528,
+      "png": true
+    },
+    {
+      "file": "/assets/cut-croissant-DzVUyq9S.png",
+      "transparentPixels": 356515,
+      "foregroundPixels": 304065,
+      "total": 664576,
+      "png": true
+    },
+    {
+      "file": "/assets/cut-brownie-RnViy3n4.png",
+      "transparentPixels": 450770,
+      "foregroundPixels": 208634,
+      "total": 664576,
+      "png": true
+    },
+    {
+      "file": "/assets/cut-berry-NDG4zRqO.png",
+      "transparentPixels": 406914,
+      "foregroundPixels": 254537,
+      "total": 664576,
+      "png": true
+    },
+    {
+      "file": "/assets/cut-mocha-qVFo_jK4.png",
+      "transparentPixels": 355365,
+      "foregroundPixels": 305783,
+      "total": 664576,
+      "png": true
+    },
+    {
+      "file": "/assets/decor-graos-colher-usUhQ_3f.png",
+      "transparentPixels": 1055840,
+      "foregroundPixels": 457950,
+      "total": 1572528,
+      "png": true
+    }
+  ],
+  "float": "active",
+  "reducedMotion": "stopped"
+}

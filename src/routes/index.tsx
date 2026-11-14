@@ -14,18 +14,17 @@ import {
   Coffee,
 } from "lucide-react";
 import { CART_KEY, restoreCart, adjustQuantity, type CartItem } from "@/lib/pickup";
-import hero from "@/assets/v2/hero-cafe-splash-graos.png";
+import hero from "@/assets/v2/hero-cafe-splash-solo.png";
 import cappuccino from "@/assets/v2/produto-cappuccino.png";
 import mocha from "@/assets/v2/produto-mocha-gelado.png";
 import matcha from "@/assets/v2/produto-matcha-gelado.png";
 import spoon from "@/assets/v2/decor-graos-colher.png";
 import croissant from "@/assets/cut-croissant.png";
-import photo1 from "@/assets/optimized/cafe-photo-01.webp";
-import photo2 from "@/assets/optimized/cafe-photo-02.webp";
+import officialLogo from "@/assets/lolo-logo-transparent.png";
+import chocolateDessert from "@/assets/cut-brownie.png";
+import fruitDrink from "@/assets/cut-berry.png";
+import milkDrink from "@/assets/cut-mocha.png";
 import photo3 from "@/assets/optimized/cafe-photo-03.webp";
-import photo4 from "@/assets/optimized/cafe-photo-04.webp";
-import photo5 from "@/assets/optimized/cafe-photo-05.webp";
-import photo9 from "@/assets/optimized/cafe-photo-09.webp";
 import facade from "@/assets/optimized/cafe-photo-10.webp";
 
 const CafeMotion = lazy(() => import("@/components/cafe-motion"));
@@ -76,6 +75,27 @@ const favorites = [
     desc: "Green matcha and cold milk, layered over ice.",
     img: matcha,
   },
+  {
+    id: "butter-croissants",
+    name: "Golden Croissants",
+    category: "Something flaky",
+    desc: "Golden layers. A little something to enjoy alongside your coffee.",
+    img: croissant,
+  },
+  {
+    id: "chocolate-dessert",
+    name: "Chocolate Dessert",
+    category: "Something sweet",
+    desc: "A chocolate-topped treat for your next sweet moment.",
+    img: chocolateDessert,
+  },
+  {
+    id: "fruit-drink",
+    name: "Fruit Drink",
+    category: "A colorful pause",
+    desc: "A bright, fruit-filled serving inspiration from our café photographs.",
+    img: fruitDrink,
+  },
 ];
 const links = [
   { id: "home", label: "Home" },
@@ -109,9 +129,9 @@ const beats = [
   {
     title: "And a moment for yourself.",
     text: "Pull up a chair. Leave a little space in your day for Lolo.",
-    img: photo4,
-    alt: "An iced coffee on a wooden table beside greenery",
-    cutout: false,
+    img: milkDrink,
+    alt: "An isolated iced milk coffee, shown as a serving suggestion",
+    cutout: true,
   },
 ];
 
@@ -220,7 +240,13 @@ function Index() {
       </a>
       <header className="site-header">
         <a className="wordmark" href="#home" aria-label="Lolo Café home">
-          lolo<span>CAFÉ</span>
+          <img
+            src={officialLogo}
+            alt="Lolo Café official logo"
+            width="1027"
+            height="1027"
+            decoding="async"
+          />
         </a>
         <nav aria-label="Main navigation" className={mobileOpen ? "main-nav is-open" : "main-nav"}>
           {links.map((link) => (
@@ -287,10 +313,17 @@ function Index() {
             <img
               className="hero-image"
               src={hero}
-              alt="Two coffee cups surrounded by an arc of coffee and scattered beans"
+              alt="An individual coffee cup beneath a splash of coffee"
               width="1024"
               height="1024"
               fetchPriority="high"
+            />
+            <img
+              className="hero-milk-cup"
+              src={milkDrink}
+              alt="An individual iced coffee with milk"
+              width="704"
+              height="944"
             />
             <div className="hero-stamp" aria-hidden="true">
               A little
@@ -349,17 +382,17 @@ function Index() {
           <div className="counter-stage" ref={selection}>
             <button
               className="counter-side"
-              onClick={() => setSelected((selected + 2) % 3)}
-              aria-label={`Feature ${favorites[(selected + 2) % 3]!.name}`}
+              onClick={() => setSelected((selected + favorites.length - 1) % favorites.length)}
+              aria-label={`Feature ${favorites[(selected + favorites.length - 1) % favorites.length]!.name}`}
             >
               <img
-                src={favorites[(selected + 2) % 3]!.img}
+                src={favorites[(selected + favorites.length - 1) % favorites.length]!.img}
                 alt=""
                 width="1024"
                 height="1024"
                 loading="lazy"
               />
-              <span>{favorites[(selected + 2) % 3]!.name}</span>
+              <span>{favorites[(selected + favorites.length - 1) % favorites.length]!.name}</span>
               <ArrowLeft size={19} />
             </button>
             <div className="counter-feature">
@@ -367,15 +400,17 @@ function Index() {
                 <span className="plinth-orbit" aria-hidden="true" />
                 <span className="counter-bean bean-one" aria-hidden="true" />
                 <span className="counter-bean bean-two" aria-hidden="true" />
-                <img
-                  className="counter-feature-image"
-                  key={product.id}
-                  src={product.img}
-                  alt={product.name + " promotional serving illustration"}
-                  width="1024"
-                  height="1024"
-                  loading="lazy"
-                />
+                <div className="counter-feature-float">
+                  <img
+                    className="counter-feature-image"
+                    key={product.id}
+                    src={product.img}
+                    alt={product.name + " isolated transparent serving illustration"}
+                    width="1024"
+                    height="1024"
+                    loading="lazy"
+                  />
+                </div>
               </div>
               <div className="counter-details" aria-live="polite">
                 <p className="eyebrow">{product.category}</p>
@@ -388,25 +423,25 @@ function Index() {
             </div>
             <button
               className="counter-side"
-              onClick={() => setSelected((selected + 1) % 3)}
-              aria-label={`Feature ${favorites[(selected + 1) % 3]!.name}`}
+              onClick={() => setSelected((selected + 1) % favorites.length)}
+              aria-label={`Feature ${favorites[(selected + 1) % favorites.length]!.name}`}
             >
               <img
-                src={favorites[(selected + 1) % 3]!.img}
+                src={favorites[(selected + 1) % favorites.length]!.img}
                 alt=""
                 width="1024"
                 height="1024"
                 loading="lazy"
               />
-              <span>{favorites[(selected + 1) % 3]!.name}</span>
+              <span>{favorites[(selected + 1) % favorites.length]!.name}</span>
               <ArrowRight size={19} />
             </button>
           </div>
           <div className="counter-controls">
             <button
               className="icon-button"
-              aria-label="Previous drink"
-              onClick={() => setSelected((selected + 2) % 3)}
+              aria-label="Previous favorite"
+              onClick={() => setSelected((selected + favorites.length - 1) % favorites.length)}
             >
               <ArrowLeft />
             </button>
@@ -415,22 +450,37 @@ function Index() {
             </span>
             <button
               className="icon-button"
-              aria-label="Next drink"
-              onClick={() => setSelected((selected + 1) % 3)}
+              aria-label="Next favorite"
+              onClick={() => setSelected((selected + 1) % favorites.length)}
             >
               <ArrowRight />
             </button>
           </div>
+          <div className="counter-picker" role="group" aria-label="Choose a favorite">
+            {favorites.map((item, index) => (
+              <button
+                key={item.id}
+                className="counter-pick"
+                aria-label={`Choose ${item.name}`}
+                aria-pressed={selected === index}
+                onClick={() => setSelected(index)}
+              >
+                <img src={item.img} alt="" width="160" height="180" loading="lazy" />
+                <span>{item.name}</span>
+                <small>{item.category}</small>
+              </button>
+            ))}
+          </div>
           <p className="menu-disclaimer">
-            A preview of our coffee favorites. Images are serving illustrations. Pickup ordering is
-            currently in demo mode; prices and availability are not confirmed.
+            A preview of our drinks and sweet favorites. Images are serving illustrations. Pickup
+            ordering is currently in demo mode; prices and availability are not confirmed.
           </p>
         </section>
 
         <section className="food-section section-shell" aria-labelledby="food-title">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Through the café lens</p>
+              <p className="eyebrow">A little something on the side</p>
               <h2 id="food-title">
                 Something sweet.
                 <br />
@@ -438,31 +488,31 @@ function Index() {
               </h2>
             </div>
             <p>
-              Real moments from our tables.
+              A few little pairings to inspire you.
               <br />
-              Your next coffee break, in pictures.
+              Serving inspiration. Availability varies.
             </p>
           </div>
           <div className="food-gallery">
             {[
               {
-                img: photo2,
+                img: croissant,
                 title: "A flaky kind of morning",
-                alt: "A basket of croissants inside Lolo Café",
+                alt: "Golden croissants, isolated on a transparent background",
               },
               {
-                img: photo5,
-                title: "A little green in your day",
-                alt: "Two iced green drinks on a café table",
+                img: milkDrink,
+                title: "Coffee, with a little softness",
+                alt: "An isolated iced coffee with milk",
               },
               {
-                img: photo9,
+                img: chocolateDessert,
                 title: "Save room for something sweet",
-                alt: "A selection of desserts on a wooden café table",
+                alt: "An isolated chocolate-topped dessert",
               },
             ].map((p) => (
               <figure className="photo-reveal" key={p.title}>
-                <div className="photo-frame">
+                <div className="photo-frame cutout-frame">
                   <img src={p.img} alt={p.alt} width="768" height="1024" loading="lazy" />
                 </div>
                 <figcaption>{p.title}</figcaption>
@@ -541,8 +591,8 @@ function Index() {
             </a>
             <div className="detail-photo">
               <img
-                src={photo1}
-                alt="A bowl and bread on a wooden table beside greenery in the café"
+                src={croissant}
+                alt="Golden croissants, shown as a serving suggestion"
                 width="768"
                 height="1024"
                 loading="lazy"
@@ -593,7 +643,13 @@ function Index() {
       </main>
       <footer className="site-footer">
         <a className="wordmark" href="#home">
-          lolo<span>CAFÉ</span>
+          <img
+            src={officialLogo}
+            alt="Lolo Café official logo"
+            width="1027"
+            height="1027"
+            decoding="async"
+          />
         </a>
         <p>
           A little taste of the good life.
